@@ -1,10 +1,10 @@
-1) Выводим по короткому хешу. В выводе присутствует полный хеш. 
+1) Ищем по короткому хешу. В выводе git show присутствует полный хеш. 
 dgolodnikov@goofy:~/terraform$ git show aefea
 
 commit aefead2207ef7e2aa5dc81a34aedf0cad4c32545
 Update CHANGELOG.md
 
-2) Выводим по короткому хешу.  В выводе присутствует и tag, если он был присвоен.  
+2) Ищем по короткому хешу.  В выводе git show присутствует и tag, если он был присвоен.  
 dgolodnikov@goofy:~/terraform$ git show 85024d3
 
 tag: v0.12.23
@@ -15,7 +15,7 @@ dgolodnikov@goofy:~/terraform$ git show b8d720f8340221f2146e4e4870bf2ee0bc48f2d5
 commit 56cd7859e05c36c06b56d013b55a252d0bb7e158
 commit 9ea88f22fc6269854151c571162c5bcf958bee2b
 
-Можно также увидеть в выводе ниже и далее по короткому хешу узнать полный хеш через git show :
+Можно также увидеть в выводе ниже через git log и далее, по короткому хешу узнать полный хеш через git show:
 dgolodnikov@goofy:~/terraform$ git log b8d720f8340221f2146e4e4870bf2ee0bc48f2d5 --graph --oneline
 *   b8d720f83 Merge pull request #23916 from hashicorp/cgriggs01-stable
 |\
@@ -23,7 +23,7 @@ dgolodnikov@goofy:~/terraform$ git log b8d720f8340221f2146e4e4870bf2ee0bc48f2d5 
 |/
 *   56cd7859e Merge pull request #23857 from hashicorp/cgriggs01-stable
 
-4) Вывод истории коммитов между двумя тегами
+4) Вывод истории коммитов между двумя тегами, используем две точки.
 git log v0.12.23..v0.12.24 | grep -e ^"    [A-Za-z0-9]" -e ^commit
 
 commit 33ff1c03bb960b332be3af2e333462dde88b279e
