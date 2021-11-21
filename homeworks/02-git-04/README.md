@@ -70,7 +70,7 @@
 	dgolodnikov@goofy:~/terraform$ git log -S"func providerSource("  | grep ^commit
 	commit 8c928e83589d90a031f811fae52a81be7153e82f
 
-Далее можно посмотреть саму функцию 
+Далее можно посмотреть сам коммит 
 
 	git show 8c928e83589d90a031f811fae52a81be7153e82f 
 и убедиться в создании искомой функции
