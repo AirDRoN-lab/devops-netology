@@ -1,17 +1,17 @@
-###1)
+### 1)
 Ищем по короткому хешу. В выводе git show присутствует полный хеш. 
 
 	dgolodnikov@goofy:~/terraform$ git show aefea
 	commit aefead2207ef7e2aa5dc81a34aedf0cad4c32545
 	Update CHANGELOG.md
 
-###2)
+### 2)
 Ищем по короткому хешу.  В выводе git show присутствует и tag, если он был присвоен.  
 
 	dgolodnikov@goofy:~/terraform$ git show 85024d3
 	tag: v0.12.23
 
-###3)
+### 3)
 Вывод всех родителей конкретного коммита по хешу. 
 
 	dgolodnikov@goofy:~/terraform$ git show b8d720f8340221f2146e4e4870bf2ee0bc48f2d5^@
@@ -27,7 +27,7 @@
 	|/
 	*   56cd7859e Merge pull request #23857 from hashicorp/cgriggs01-stable
 
-###4)
+### 4)
 Вывод истории коммитов между двумя тегами, используем две точки.
 
 	git log v0.12.23..v0.12.24 | grep -e ^"    [A-Za-z0-9]" -e ^commit
@@ -64,15 +64,18 @@
 	
 	git show v0.12.23..v0.12.24 --oneline --no-patch
 
-###5)
+### 5)
 Поиск коммитов с изменением функции providerSource
     
 	dgolodnikov@goofy:~/terraform$ git log -S"func providerSource("  | grep ^commit
 	commit 8c928e83589d90a031f811fae52a81be7153e82f
 
-Далее можно посмотреть саму функцию git show 8c928e83589d90a031f811fae52a81be7153e82f и убедиться в создании искомой функции
+Далее можно посмотреть саму функцию 
 
-###6)
+	git show 8c928e83589d90a031f811fae52a81be7153e82f 
+и убедиться в создании искомой функции
+
+### 6)
 Ищем файл в которой обьявляется функция
 
 	dgolodnikov@goofy:~/terraform$ git grep -n "func globalPluginDirs"
@@ -87,7 +90,7 @@
 	commit 66ebff90cdfaa6938f26f908c7ebad8d547fea17
 	commit 8364383c359a6b738a436d1b7745ccdce178df47
 
-###7)
+### 7)
 Ищем коммиты с обьявлением функции synchronizedWriters
 
 	dgolodnikov@goofy:~/terraform$ git log -S"func synchronizedWriters(" | grep ^commit
