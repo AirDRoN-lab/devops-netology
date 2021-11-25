@@ -1,8 +1,8 @@
 ### 1-4)
 Задания выполнены. Vagrant и VB установлен.
 
-PS C:\Users\dmgol\PycharmProjects\DEVSYS\Homeworks\devops-netology\homeworks> vagrant.exe --version
-Vagrant 2.2.19
+	PS C:\Users\dmgol\PycharmProjects\DEVSYS\Homeworks\devops-netology\homeworks> vagrant.exe --version
+	Vagrant 2.2.19
 
 ### 5)
 По умолчанию выделен ресурс RAM 1024МБ и 2 CPU.
