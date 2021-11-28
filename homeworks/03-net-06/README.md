@@ -58,13 +58,15 @@ Ethernet MTU = IPv4header + TCPheader + Payload
 
 ### 12) Сколько портов TCP находится в состоянии прослушивания на вашей виртуальной машине с Ubuntu, и каким процессам они принадлежат?
 
-	vagrant@vagrant:~$ sudo ss state listening -t -p
-	Recv-Q      Send-Q           Local Address:Port               Peer Address:Port      Process
-	0           4096                   0.0.0.0:sunrpc                  0.0.0.0:*          users:(("rpcbind",pid=562,fd=4),("systemd",pid=1,fd=35))
-	0           4096             127.0.0.53%lo:domain                  0.0.0.0:*          users:(("systemd-resolve",pid=563,fd=13))
-	0           128                    0.0.0.0:ssh                     0.0.0.0:*          users:(("sshd",pid=662,fd=3))
-	0           4096                      [::]:sunrpc                     [::]:*          users:(("rpcbind",pid=562,fd=6),("systemd",pid=1,fd=37))
-	0           128                       [::]:ssh                        [::]:*          users:(("sshd",pid=662,fd=4))
+Это можно узнать с помощью утилиты ss (см.ниже). Порты TCP в состоянии прослушивания 111 (процесс rpcbind и systemd), 53 (процесс systemd-resolve) и 22 (процесс sshd).
+
+	vagrant@vagrant:~$ sudo ss -t -l -p -n
+	State      Recv-Q     Send-Q         Local Address:Port         Peer Address:Port     Process
+	LISTEN     0          4096                 0.0.0.0:111               0.0.0.0:*         users:(("rpcbind",pid=554,fd=4),("systemd",pid=1,fd=35))
+	LISTEN     0          4096           127.0.0.53%lo:53                0.0.0.0:*         users:(("systemd-resolve",pid=556,fd=13))
+	LISTEN     0          128                  0.0.0.0:22                0.0.0.0:*         users:(("sshd",pid=653,fd=3))
+	LISTEN     0          4096                    [::]:111                  [::]:*         users:(("rpcbind",pid=554,fd=6),("systemd",pid=1,fd=37))
+	LISTEN     0          128                     [::]:22                   [::]:*         users:(("sshd",pid=653,fd=4))
 
 ### 13) Какой ключ нужно добавить в tcpdump, чтобы он начал выводить не только заголовки, но и содержимое фреймов в текстовом виде? А в текстовом и шестнадцатиричном?
 
