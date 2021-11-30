@@ -1,6 +1,6 @@
 ### 1) Работа c HTTP через телнет. Подключитесь утилитой телнет к сайту stackoverflow.com telnet stackoverflow.com 80. Отправьте HTTP запрос. В ответе укажите полученный HTTP код, что он означает?
 
-Код ниже. Код ответ 301, это редирект на https://stackoverflow.com/questions
+Код ниже. Код ответа 301 (редирект на https://stackoverflow.com/questions)
 
 	HTTP/1.1 301 Moved Permanently
 	cache-control: no-cache, no-store, must-revalidate
@@ -66,13 +66,13 @@
 	user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36
 
 ### 3) Какой IP адрес у вас в интернете?
-IP адрес в сети Интернет 2a02:2698:5000:8234:d027:4528:2340:e1c2
+IP (v6 адрес) адрес в сети Интернет 2a02:2698:5000:8234:d027:4528:2340:e1c2
 
 ### 4)Какому провайдеру принадлежит ваш IP адрес? Какой автономной системе AS? Воспользуйтесь утилитой whois
 JSC "ER-Telecom Holding", AS43478
 
 ### 5)Через какие сети проходит пакет, отправленный с вашего компьютера на адрес 8.8.8.8? Через какие AS? Воспользуйтесь утилитой traceroute
-Проходит через AS34533/AS43478/AS41843 (JSC "ER-Telecom") и AS15169 (Google LLC).
+Проходит через AS34533/AS43478/AS41843 (JSC "ER-Telecom") и AS15169 (Google LLC)
 
 	vagrant@vagrant:~$ sudo traceroute -I -An 8.8.8.8
 	traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
@@ -125,7 +125,6 @@ JSC "ER-Telecom Holding", AS43478
 	18.|-- 8.8.8.8                   76.7%    30   58.2  63.8  58.2  79.2   7.3
 
 ### 7)Какие DNS сервера отвечают за доменное имя dns.google? Какие A записи? воспользуйтесь утилитой dig
-
 NS запись для dns.google:
  
 	dns.google.             10800   IN      NS      ns1.zdns.google.
@@ -139,6 +138,7 @@ NS запись для dns.google:
 	dns.google.             326     IN      A       8.8.4.4
 
 ### 8)Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой dig
+Домен привязан dns.google
 
 	;; ANSWER SECTION:
 	8.8.8.8.in-addr.arpa.   73372   IN      PTR     dns.google.
