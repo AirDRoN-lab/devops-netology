@@ -138,7 +138,7 @@ NS запись для dns.google:
 	dns.google.             326     IN      A       8.8.4.4
 
 ### 8)Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой dig
-Домен привязан dns.google
+Домен привязан dns.google к 8.8.8.8 b 8.8.4.4. PTR запись ниже. 
 
 	;; ANSWER SECTION:
 	8.8.8.8.in-addr.arpa.   73372   IN      PTR     dns.google.
