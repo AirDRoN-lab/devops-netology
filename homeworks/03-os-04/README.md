@@ -21,8 +21,30 @@
 	EXTRA_OPTS="--collector.cpu --collector.diskstats --collector.loadavg --collector.meminfo --collector.netstat --collector.stat --collector.thermal_zone"
 
 Node_Exporter запущен (после ребута):
+
 	vagrant@vagrant:~/node_exporter$ systemctl list-units | grep Node_Exporter
 		node_exporter.service                                                                    loaded active running   Node_Exporter Settings Service
+
+	root@vagrant:~# systemctl status node_exporter
+	● node_exporter.service - Node_Exporter Settings Service
+		Loaded: loaded (/etc/systemd/system/node_exporter.service; enabled; vendor preset: enabled)
+		Active: active (running) since Sun 2021-12-05 09:56:12 UTC; 7h ago
+		Main PID: 649 (node_exporter)
+		Tasks: 3 (limit: 2279)
+		Memory: 13.5M
+		CGroup: /system.slice/node_exporter.service
+				└─649 /home/vagrant/node_exporter/node_exporter --collector.cpu --collector.diskstats --collector.loadavg --collector.meminfo --collec>
+
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=thermal_zone
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=time
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=timex
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=udp_queues
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=uname
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=vmstat
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=xfs
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=zfs
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:199 level=info msg="Listening on" address=:9100
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.304Z caller=tls_config.go:195 level=info msg="TLS is disabled." http2=false
 
 ### 2) Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 Думаю можно остановиться на следующих опциях node_exporter:
@@ -79,3 +101,6 @@ Netdata поднялась, страница открылась (скриншо�
 
 	root@vagrant:/# ulimit -u -H
 	7598
+	
+Предотвращает размножение функции cgroup. Сообщение из dmesg:
+	[12132.915260] cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-3.scope

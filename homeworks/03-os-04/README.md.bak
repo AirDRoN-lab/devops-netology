@@ -21,8 +21,30 @@
 	EXTRA_OPTS="--collector.cpu --collector.diskstats --collector.loadavg --collector.meminfo --collector.netstat --collector.stat --collector.thermal_zone"
 
 Node_Exporter запущен (после ребута):
+
 	vagrant@vagrant:~/node_exporter$ systemctl list-units | grep Node_Exporter
 		node_exporter.service                                                                    loaded active running   Node_Exporter Settings Service
+
+	root@vagrant:~# systemctl status node_exporter
+	● node_exporter.service - Node_Exporter Settings Service
+		Loaded: loaded (/etc/systemd/system/node_exporter.service; enabled; vendor preset: enabled)
+		Active: active (running) since Sun 2021-12-05 09:56:12 UTC; 7h ago
+		Main PID: 649 (node_exporter)
+		Tasks: 3 (limit: 2279)
+		Memory: 13.5M
+		CGroup: /system.slice/node_exporter.service
+				└─649 /home/vagrant/node_exporter/node_exporter --collector.cpu --collector.diskstats --collector.loadavg --collector.meminfo --collec>
+
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=thermal_zone
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=time
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=timex
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=udp_queues
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=uname
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=vmstat
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=xfs
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:115 level=info collector=zfs
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.300Z caller=node_exporter.go:199 level=info msg="Listening on" address=:9100
+	Dec 05 09:56:12 vagrant node_exporter[649]: ts=2021-12-05T09:56:12.304Z caller=tls_config.go:195 level=info msg="TLS is disabled." http2=false
 
 ### 2) Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 Думаю можно остановиться на следующих опциях node_exporter:
@@ -64,9 +86,17 @@ Netdata поднялась, страница открылась (скриншо�
 
 ### 6) Запустите любой долгоживущий процесс (не ls, который отработает мгновенно, а, например, sleep 1h) в отдельном неймспейсе процессов; покажите, что ваш процесс работает под PID 1 через nsenter. Для простоты работайте в данном задании под root (sudo -i). Под обычным пользователем требуются дополнительные опции (--map-root-user) и т.д.
 
+Да, получилось сделать sleep с PID1 в отдельном namespace:
+
+	root@vagrant:~# nsenter --target 4286 --pid --mount
+	root@vagrant:/# ps aux
+	USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+	root           1  0.0  0.0   8076   588 pts/3    S+   11:02   0:00 /usr/bin/sleep 1h
+	root           2  0.0  0.4   9836  4076 pts/0    S    11:03   0:00 -bash
+	root          11  0.0  0.3  11492  3448 pts/0    R+   11:03   0:00 ps aux
+
 ### 7) Найдите информацию о том, что такое :(){ :|:& };:. Запустите эту команду в своей виртуальной машине Vagrant с Ubuntu 20.04 (это важно, поведение в других ОС не проверялось). Некоторое время все будет "плохо", после чего (минуты) – ОС должна стабилизироваться. Вызов dmesg расскажет, какой механизм помог автоматической стабилизации. Как настроен этот механизм по-умолчанию, и как изменить число процессов, которое можно создать в сессии?
 
-	
 Это форк бомба. Функция : порождает сама себя и делает это в фоновом режиме. В итоге кол-во процессов стремительно растет. Кол-во процессов в системе лимитировано и задается ulimit -u (у меня значение 7598). 
 
 	root@vagrant:/# ulimit -u -H
