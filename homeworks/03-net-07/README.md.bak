@@ -61,6 +61,38 @@ Win: ipconfig
 				
 ###4)Какие типы агрегации интерфейсов есть в Linux? Какие опции есть для балансировки нагрузки? Приведите пример конфига.
 
+Конфигурация netplan ниже. Режим агрегации указан в разделе mode (в нашем случае active-backup). Возможные значения balance-rr (дефолт),
+active-backup,  balance-xor, broadcast, 802.3ad, balance-tlb и balance-alb.  Для OpenVSwitch возможны значения active-backup и дополнительно balance-tcp and balance-slb.
+
+Для балансировки нагрузки есть следующие опции:
+transmit-hash-policy (применимо только для balance-xor, 802.3ad and balance-tlb modes). Возможные варианты значений: layer2, layer3+4, layer2+3, encap2+3, and encap3+4. 
+
+	golodnikov@goofy:/etc/netplan$ cat /etc/netplan/00-installer-config.yaml
+	network:
+	  ethernets:
+		eno1:
+		  addresses:
+		  - 83.149.49.69/28
+		  gateway4: 83.149.49.65
+		  nameservers:
+			addresses:
+			- 8.8.8.8
+			search: []
+		eno2:
+		  dhcp4: no
+		eno3:
+		  dhcp4: no
+		eno4:
+		  dhcp4: no
+	  version: 2
+	  bonds:
+		bond0:
+		  interfaces:
+		  - eno3
+		  - eno4
+		  parameters:
+			mode: active-backup
+			primary: eno3
 
 
 ###5)Сколько IP адресов в сети с маской /29 ? Сколько /29 подсетей можно получить из сети с маской /24. Приведите несколько примеров /29 подсетей внутри сети 10.10.10.0/24.
