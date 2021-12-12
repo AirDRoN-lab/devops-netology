@@ -229,52 +229,6 @@
 
 ### 10) Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.
 
-  vagrant@vagrant:~$ sudo lvcreate -n lv1_100 -L 100M /dev/vg01
-  Logical volume "lv1_100" created.
-
-	  vagrant@vagrant:~$ sudo lvdisplay /dev/vg01/lv1_100
-	  --- Logical volume ---
-	  LV Path                /dev/vg01/lv1_100
-	  LV Name                lv1_100
-	  VG Name                vg01
-	  LV UUID                r9g3NH-Vwy5-lVcL-dfad-RfFi-Sxs0-ZJ21j1
-	  LV Write Access        read/write
-	  LV Creation host, time vagrant, 2021-12-12 09:44:41 +0000
-	  LV Status              available
-	  # open                 0
-	  LV Size                100.00 MiB
-	  Current LE             25
-	  Segments               1
-	  Allocation             inherit
-	  Read ahead sectors     auto
-	  - currently set to     256
-	  Block device           253:2
-	  
-	vagrant@vagrant:~$ lsblk
-	NAME                 MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-	sda                    8:0    0   64G  0 disk
-	├─sda1                 8:1    0  512M  0 part  /boot/efi
-	├─sda2                 8:2    0    1K  0 part
-	└─sda5                 8:5    0 63.5G  0 part
-	  ├─vgvagrant-root   253:0    0 62.6G  0 lvm   /
-	  └─vgvagrant-swap_1 253:1    0  980M  0 lvm   [SWAP]
-	sdb                    8:16   0  2.5G  0 disk
-	├─sdb1                 8:17   0    2G  0 part
-	│ └─md0                9:0    0    2G  0 raid1
-	│   └─vg01-lv1_100   253:2    0  100M  0 lvm
-	└─sdb2                 8:18   0  511M  0 part
-	  └─md1                9:1    0 1018M  0 raid0
-	sdc                    8:32   0  2.5G  0 disk
-	├─sdc1                 8:33   0    2G  0 part
-	│ └─md0                9:0    0    2G  0 raid1
-	│   └─vg01-lv1_100   253:2    0  100M  0 lvm
-	└─sdc2                 8:34   0  511M  0 part
-	  └─md1                9:1    0 1018M  0 raid0
-
-		Все что выше не согласно ТЗ домашнего задания (касается только п.10)! Ошибочка вышла! Откат (откат остался за кадром)!
----------------------
-		Все что ниже верно, но есть вопрос. 
-
 	  vagrant@vagrant:/mnt$ sudo lvcreate -n lv1_100 -L 100M /dev/vg01 /dev/md1
 	  Logical volume "lv1_100" created.
 
