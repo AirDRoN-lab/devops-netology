@@ -37,29 +37,26 @@ done
 Скрипт исправлен до следуюшего вида:
 
 ```
-  1 #!/usr/bin/env bash
-  2
-  3 while ((1 == 1))
-  4 do
-  5         curl https://ngs.ru
-  6         if (($? == 0))
-  7         then
-  8                 c=$(date)+UP
-  9                 echo $c  >> curl.log
- 10                 break
- 11         fi
- 12         c=$(date)+DOWN
- 13         echo $c >> curl.log
- 14         sleep 1
- 15 done
+#!/usr/bin/env bash
+
+while ((1 == 1))
+do
+        curl https://ngs.ru
+        if (($? == 0))
+        then
+                echo $(date)  >> curl.log
+                break
+        fi
+done
 ```
 
 Необходимо написать скрипт, который проверяет доступность трёх IP: `192.168.0.1`, `173.194.222.113`, `87.250.250.242` по `80` порту и записывает результат в файл `log`. Проверять доступность необходимо пять раз для каждого узла.
 
 
 ### Ваш скрипт:
+```
 #!/usr/bin/env bash
-```bash
+bash
 IP=(192.168.0.1 173.194.222.113 87.250.250.242)
 for (( i = 1; i <= 5; i++ ))
 do
