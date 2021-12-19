@@ -26,6 +26,7 @@ c = a + b
 import os
 
 
+
 bash_command = ["cd ~/netology/sysadm-homeworks", "git status"]
 result_os = os.popen(' && '.join(bash_command)).read()
 is_change = False
@@ -38,12 +39,22 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+import os
+
+path='c:\\Users\\dmgol\\PycharmProjects\\DEVSYS\\devops-netology\\homeworks\\'
+shell_command = ['cd '+path, 'git status']
+result_os = os.popen(' && '.join(shell_command)).read()
+is_change = False
+for result in result_os.split('\n'):
+    if result.find('modified') != -1:
+        prepare_result = path+result.replace('\tmodified:   ', '')
+        print(prepare_result.replace('/','\\'))
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README.md
+c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README.md.bak
 ```
 
 ## Обязательная задача 3
@@ -51,12 +62,23 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+import os
+import sys
+
+path=sys.argv[1]
+shell_command = ['cd '+path, 'git status']
+result_os = os.popen(' && '.join(shell_command)).read()
+is_change = False
+for result in result_os.split('\n'):
+    if result.find('modified') != -1:
+        prepare_result = path+result.replace('\tmodified:   ', '')
+        print(prepare_result.replace('/','\\'))
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README.md
+c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README.md.bak
 ```
 
 ## Обязательная задача 4
@@ -78,10 +100,10 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+later
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+later
 ```

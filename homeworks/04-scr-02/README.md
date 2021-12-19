@@ -25,8 +25,6 @@ c = a + b
 
 import os
 
-
-
 bash_command = ["cd ~/netology/sysadm-homeworks", "git status"]
 result_os = os.popen(' && '.join(bash_command)).read()
 is_change = False
@@ -39,6 +37,8 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
+#!/usr/bin/env python3
+
 import os
 
 path='c:\\Users\\dmgol\\PycharmProjects\\DEVSYS\\devops-netology\\homeworks\\'
@@ -62,6 +62,8 @@ c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README
 
 ### Ваш скрипт:
 ```python
+#!/usr/bin/env python3
+
 import os
 import sys
 
@@ -86,12 +88,35 @@ c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README
 
 ### Ваш скрипт:
 ```python
-???
+#!/usr/bin/env python3
+
+import socket
+import time
+
+i=0
+oldip={}
+
+domains=["drive.google.com", "mail.google.com", "google.com"]
+for item in domains:
+    oldip.update({domains[i] : socket.gethostbyname(item)})
+    i+=1
+i=0
+while (1 == 1):
+    print("Cheсking...")
+    for item in oldip:
+        iphost = socket.gethostbyname(item)
+        if oldip[item] != iphost:
+            print("[ERROR] "+item+" IP mismatch: "+oldip[item]+" "+iphost)
+            exit(0)
+    time.sleep(10)
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+Cheсking...
+Cheсking...
+Cheсking...
+[ERROR] drive.google.com IP mismatch: 142.250.150.194 64.233.165.194
 ```
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
