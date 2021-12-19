@@ -13,9 +13,9 @@ c = a + b
 ### Вопросы:
 | Вопрос  | Ответ |
 | ------------- | ------------- |
-| Какое значение будет присвоено переменной `c`?  | ???  |
-| Как получить для переменной `c` значение 12?  | ???  |
-| Как получить для переменной `c` значение 3?  | ???  |
+| Какое значение будет присвоено переменной `c`?  | никакой, нельзя суммировать int+str  |
+| Как получить для переменной `c` значение 12?  | сделать переменную a, строковой. Т.е. a = '1'  или a = "1" |
+| Как получить для переменной `c` значение 3?  | сделать переменную b, целочисленной. Т.е. b = 2  |
 
 ## Обязательная задача 2
 Мы устроились на работу в компанию, где раньше уже был DevOps Engineer. Он написал скрипт, позволяющий узнать, какие файлы модифицированы в репозитории, относительно локальных изменений. Этим скриптом недовольно начальство, потому что в его выводе есть не все изменённые файлы, а также непонятен полный путь к директории, где они находятся. Как можно доработать скрипт ниже, чтобы он исполнял требования вашего руководителя?
@@ -24,6 +24,8 @@ c = a + b
 #!/usr/bin/env python3
 
 import os
+
+
 
 bash_command = ["cd ~/netology/sysadm-homeworks", "git status"]
 result_os = os.popen(' && '.join(bash_command)).read()
@@ -37,12 +39,22 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+import os
+
+path='c:\\Users\\dmgol\\PycharmProjects\\DEVSYS\\devops-netology\\homeworks\\'
+shell_command = ['cd '+path, 'git status']
+result_os = os.popen(' && '.join(shell_command)).read()
+is_change = False
+for result in result_os.split('\n'):
+    if result.find('modified') != -1:
+        prepare_result = path+result.replace('\tmodified:   ', '')
+        print(prepare_result.replace('/','\\'))
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README.md
+c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README.md.bak
 ```
 
 ## Обязательная задача 3
@@ -50,12 +62,23 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+import os
+import sys
+
+path=sys.argv[1]
+shell_command = ['cd '+path, 'git status']
+result_os = os.popen(' && '.join(shell_command)).read()
+is_change = False
+for result in result_os.split('\n'):
+    if result.find('modified') != -1:
+        prepare_result = path+result.replace('\tmodified:   ', '')
+        print(prepare_result.replace('/','\\'))
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README.md
+c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README.md.bak
 ```
 
 ## Обязательная задача 4
@@ -77,10 +100,10 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+later
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+later
 ```
