@@ -40,7 +40,50 @@
 
 2. В прошлый рабочий день мы создавали скрипт, позволяющий опрашивать веб-сервисы и получать их IP. К уже реализованному функционалу нам нужно добавить возможность записи JSON и YAML файлов, описывающих наши сервисы. Формат записи JSON по одному сервису: { "имя сервиса" : "его IP"}. Формат записи YAML по одному сервису: - имя сервиса: его IP. Если в момент исполнения скрипта меняется IP у сервиса - он должен так же поменяться в yml и json файле.
 
+```python
+import json
+import socket
+import time
+import yaml
 
+ipdb={}
+domains=["drive.google.com", "mail.google.com", "google.com"]
+
+for item in domains:
+    ipdb.update({item : socket.gethostbyname(item)})
+
+with open('IP.yaml', 'w') as ym1:
+    for item in ipdb:
+        pair = {item: ipdb[item]}
+        ym1.write(" - ")
+        ym1.write(yaml.dump(pair, default_flow_style=False))
+
+with open('IP.json', 'w') as js1:
+    for item in ipdb:
+        pair = {item: ipdb[item]}
+        js1.write(json.dumps(pair))
+        js1.write("\n")
+
+while (1 == 1):
+    for item in ipdb:
+        time.sleep(10)
+        print("Cheсking...")
+        iphost = socket.gethostbyname(item)
+        if ipdb[item] != iphost:
+            print("[ERROR] " + item + " IP mismatch: " + ipdb[item] + " " + iphost)
+            ipdb[item]=iphost
+            with open('IP.yaml', 'w') as ym1:
+                for item in ipdb:
+                    pair = {item: ipdb[item]}
+                    ym1.write(" - ")
+                    ym1.write(yaml.dump(pair, default_flow_style=False))
+
+            with open('IP.json', 'w') as js1:
+                for item in ipdb:
+                    pair = {item: ipdb[item]}
+                    js1.write(json.dumps(pair))
+                    js1.write("\n")
+```
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
 

@@ -84,6 +84,19 @@ while (1 == 1):
                     js1.write(json.dumps(pair))
                     js1.write("\n")
 ```
+Пример файла IP.json
+```json
+{"drive.google.com": "142.251.1.194"}
+{"mail.google.com": "64.233.161.19"}
+{"google.com": "142.251.1.102"}
+```
+
+Пример файла IP.yaml
+```yaml
+ - drive.google.com: 142.251.1.194
+ - mail.google.com: 64.233.161.19
+ - google.com: 142.251.1.102
+```
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
 
