@@ -93,14 +93,12 @@ c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README
 import socket
 import time
 
-i=0
 oldip={}
 
 domains=["drive.google.com", "mail.google.com", "google.com"]
 for item in domains:
-    oldip.update({domains[i] : socket.gethostbyname(item)})
-    i+=1
-i=0
+    oldip.update(item : socket.gethostbyname(item)})
+
 while (1 == 1):
     print("Cheсking...")
     for item in oldip:
