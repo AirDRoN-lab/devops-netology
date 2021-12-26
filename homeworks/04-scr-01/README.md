@@ -105,5 +105,28 @@ done
 
 ### Ваш скрипт:
 ```bash
-later
+#!/usr/bin/env bash
+
+#msg=`cat $1`
+#msg=$(cat $1)
+msg=$(< $1)
+#length=$(echo $msg | wc -m)
+length=${#msg}
+
+regexp="^\[[0-9]{1,3}-[A-Za-z0-9_]{1,25}-[0-9]{1,3}-[A-Za-z0-9_]{1,25}]\s"
+if (( $length > 30 ))
+then
+        echo "ERROR Message is too long"
+        exit 1
+fi
+echo $msg | grep -q -E $regexp
+if (($? != 0))
+then
+        echo "ERROR Message format mismatch"
+        exit 1
+fi
+
 ```
+
+Скрипт необходимо прописать в следующем файле:
+$ vim .git/hooks/commit-msg
