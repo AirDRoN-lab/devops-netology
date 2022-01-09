@@ -50,7 +50,7 @@ ipdb={}
 domains=["drive.google.com", "mail.google.com", "google.com"]
 
 for item in domains:
-    ipdb.update({item : socket.gethostbyname(item)})
+	ipdb[item] = socket.gethostbyname(item)
 
 with open('IP.yaml', 'w') as ym1:
     for item in ipdb:
@@ -64,7 +64,7 @@ with open('IP.json', 'w') as js1:
         js1.write(json.dumps(pair))
         js1.write("\n")
 
-while (1 == 1):
+while True:
     for item in ipdb:
         time.sleep(10)
         print("Cheсking...")
