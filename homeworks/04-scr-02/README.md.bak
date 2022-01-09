@@ -14,8 +14,8 @@ c = a + b
 | Вопрос  | Ответ |
 | ------------- | ------------- |
 | Какое значение будет присвоено переменной `c`?  | никакой, нельзя суммировать int+str  |
-| Как получить для переменной `c` значение 12?  | сделать переменную a, строковой. Т.е. a = '1'  или a = "1" |
-| Как получить для переменной `c` значение 3?  | сделать переменную b, целочисленной. Т.е. b = 2  |
+| Как получить для переменной `c` значение 12?  | сделать переменную a, строковой. Т.е. c = str(a) + b |
+| Как получить для переменной `c` значение 3?  | сделать переменную b, целочисленной. Т.е. c = a + int(b)  |
 
 ## Обязательная задача 2
 Мы устроились на работу в компанию, где раньше уже был DevOps Engineer. Он написал скрипт, позволяющий узнать, какие файлы модифицированы в репозитории, относительно локальных изменений. Этим скриптом недовольно начальство, потому что в его выводе есть не все изменённые файлы, а также непонятен полный путь к директории, где они находятся. Как можно доработать скрипт ниже, чтобы он исполнял требования вашего руководителя?
@@ -93,15 +93,13 @@ c:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks\04-scr-02\README
 import socket
 import time
 
-i=0
 oldip={}
 
 domains=["drive.google.com", "mail.google.com", "google.com"]
 for item in domains:
-    oldip.update({domains[i] : socket.gethostbyname(item)})
-    i+=1
-i=0
-while (1 == 1):
+    oldip[item] = socket.gethostbyname(item)
+
+while True: #исправлено с (1 == 1)
     print("Cheсking...")
     for item in oldip:
         iphost = socket.gethostbyname(item)
@@ -125,10 +123,55 @@ Cheсking...
 
 ### Ваш скрипт:
 ```python
-later
+import requests
+import json
+import sys
+import os
+import time
+
+username = "AirDRoN-lab"
+repo = "devops-netology-1"
+token = "ghp_f3dXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+msg=sys.argv[1]
+path=sys.argv[2]
+branch="br"+time.strftime("%Y%m%d%H%M%S")
+
+shell_command = ['cd '+path, 'git branch '+branch, 'git checkout '+branch, 'git add *', 'git commit -m "'+msg+'"', 'git push  --set-upstream origin '+branch]
+os.popen(' && '.join(shell_command)).read()
+
+task = input ("Create PR? (y/n) \n: ")
+if task == "y" or task == "Y":
+    url = "https://api.github.com/repos/{}/{}/pulls".format(username, repo)
+    headers = {
+        "Authorization": "token {}".format(token),
+    }
+    data = {
+      "title": "PULL request "+branch,
+      "body": "PR from path: "+path+" (from API)",
+      "head": branch,
+      "base": "main"
+    }
+    req = requests.post(url,data=json.dumps(data), headers=headers)
+    if req.status_code == "201":
+        exit(0)
+    else:
+        exit(1)
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-later
+C:\Users\dmgol\PycharmProjects\DEVSYS\Github_PR\venv\Scripts\python.exe C:/Users/dmgol/PycharmProjects/DEVSYS/Github_PR/main.py TEST_MSG 
+Switched to branch 'br20220110004109'
+remote: 
+remote: Create a pull request for 'br20220110004109' on GitHub by visiting:        
+remote:      https://github.com/AirDRoN-lab/devops-netology-1/pull/new/br20220110004109        
+remote: 
+To https://github.com/AirDRoN-lab/devops-netology-1.git
+ * [new branch]      br20220110004109 -> br20220110004109
+Create PR? (y/n) 
+: y
+
+Process finished with exit code 0
+
 ```
