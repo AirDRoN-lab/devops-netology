@@ -41,7 +41,7 @@ Oracle VM VirtualBox Headless Interface 6.1.28
 ```
 
 Ansible:
-```
+```bash
 dgolodnikov@DESKTOP-V4JG0DR:~$ ansible --version
 ansible [core 2.12.2]
   config file = /etc/ansible/ansible.cfg
@@ -65,6 +65,42 @@ ansible [core 2.12.2]
 
 ### Ответ:
 
+	Vagrant и VirtualBox настроены на локальной машине Win10. В свою очередь Ansible был установленв в WSL на локальной машине.
+	Т.к Ansible и Vagrant установлены на разных машинах, Ansible provisioning в vagrant насстроен не был. Ansible playbook запускался вручную (см. ниже).
+	Файл server1.netohome.yml также выложен в текущем репозитории.
+	
+```bash
+dgolodnikov@DESKTOP-V4JG0DR:/etc/ansible$ ansible-playbook server1.netohome.yml
+[WARNING]: ansible.utils.display.initialize_locale has not been called, this may result in incorrectly calculated text widths that can cause Display to print incorrect
+line lengths
+
+PLAY [nodes] ***********************************************************************************************************************************************************
+
+TASK [Gathering Facts] *************************************************************************************************************************************************
+ok: [server1.netohome]
+
+TASK [Checking DNS] ****************************************************************************************************************************************************
+changed: [server1.netohome]
+
+TASK [Installing tools] ************************************************************************************************************************************************
+ok: [server1.netohome] => (item=git)
+ok: [server1.netohome] => (item=curl)
+ok: [server1.netohome] => (item=net-tools)
+
+TASK [Installing docker] ***********************************************************************************************************************************************
+changed: [server1.netohome]
+
+TASK [Add the current user to docker group] ****************************************************************************************************************************
+ok: [server1.netohome]
+
+PLAY RECAP *************************************************************************************************************************************************************
+server1.netohome           : ok=5    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
 ```
-docker ps
+
+```bash
+
+vagrant@server1:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
 ```
