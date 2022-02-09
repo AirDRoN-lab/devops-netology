@@ -105,7 +105,58 @@ vagrant@server1:~$ docker push  dgolodnikov/nginx_devtest:1.0.3
 
 ### Ответ:
 
-Хренушки вам, а не ответ!
+Скачиваем образы:
+```
+vagrant@server1:/$ docker pull ubuntu
+Using default tag: latest
+latest: Pulling from library/ubuntu
+08c01a0ec47e: Pull complete
+Digest: sha256:669e010b58baf5beb2836b253c1fd5768333f0d1dbcb834f7c07a4dc93f474be
+Status: Downloaded newer image for ubuntu:latest
+docker.io/library/ubuntu:latest
+vagrant@server1:/$ docker pull centos
+Using default tag: latest
+latest: Pulling from library/centos
+a1d0c7532777: Pull complete
+Digest: sha256:a27fd8080b517143cbbbab9dfb7c8571c40d67d534bbdee55bd6c473f432b177
+Status: Downloaded newer image for centos:latest
+docker.io/library/centos:latest
+```
+
+Создаем тестовую директорию:
+```
+vagrant@server1:/$ sudo mkdir /test
+vagrant@server1:~$ ls /data/
+```
+
+Запускаем контейнер с volume и создаем тестовый файл:
+```
+vagrant@server1:/$ docker run -it -v /data:/data ubuntu
+root@e5c7162cd31e:/# cd /data/
+root@e5c7162cd31e:/data# echo "TEST" > file1_test.txt
+```
+
+Выходим из контейнера ubuntu через Ctrl+p, Ctrl+q (для того, чтобы не убить контейнер/процесс). Создаем файл в тестовой директории и запускаем контейнер centos:
+```
+vagrant@server1:/$ echo "TEST2" | sudo tee /data/file2_test.txt
+vagrant@server1:/$ docker run -it -v /data:/data centos
+[root@850eb23c2024]# ls /data
+file1_test.txt  file2_test.txt
+[root@850eb23c2024]# cat /data/file1_test.txt
+TEST
+[root@850eb23c2024]# cat /data/file2_test.txt
+TEST2
+```
+
+Выходим из контейнера centos через Ctrl+p, Ctrl+q. Проверяем что виртуалки запущены.
+```
+vagrant@server1:/data$ docker ps
+CONTAINER ID   IMAGE     COMMAND       CREATED              STATUS              PORTS     NAMES
+850eb23c2024   centos    "/bin/bash"   About a minute ago   Up About a minute             busy_shaw
+e5c7162cd31e   ubuntu    "bash"        4 minutes ago        Up 4 minutes                  reverent_poitras
+```
+
+PS: вывод ```ls /data``` чуть выше.
 
 ## Задача 4 (*)
 
