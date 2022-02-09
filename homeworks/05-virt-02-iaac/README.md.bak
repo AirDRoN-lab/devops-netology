@@ -31,6 +31,8 @@
 
 ### Ответ:
 
+Vagrant и VirtualBox настроены на локальной машине Win10. В свою очередь Ansible был установленв в WSL на локальной машине, т.к. поверх Win10 штатно не устанавливается. 
+
 Vagrant + Vbox:
 ```
 PS C:\Users\dmgol\PycharmProjects\DEVSYS\devops-netology\homeworks> vagrant --version
