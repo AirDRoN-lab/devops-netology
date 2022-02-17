@@ -108,7 +108,7 @@ dgolodnikov@DESKTOP-V4JG0DR:~$ yc compute image list
 
 ```
 <p align="center">
-  <img width="1200" height="600" src="./screen/image_ready.png">
+  <img width="1200" height="600" src="./screen/image_ready.PNG">
 </p>
 
 ## Задача 2
@@ -320,7 +320,7 @@ dgolodnikov@DESKTOP-V4JG0DR:~/neto_hw01/virt-homeworks/05-virt-04-docker-compose
 ```
 
 <p align="center">
-  <img width="1200" height="600" src="./screen/vm_ready.png">
+  <img width="1200" height="600" src="./screen/vm_ready.PNG">
 </p>
 
 Удаление VM:
@@ -395,10 +395,10 @@ pushgateway    /bin/pushgateway                 Up             9091/tcp
 Лоигимся в систему управления на порт 3000:
 
 <p align="center">
-  <img width="1200" height="600" src="./screen/serv_ready1.png">
+  <img width="1200" height="600" src="./screen/serv_ready1.PNG">
 </p>
 <p align="center">
-  <img width="1200" height="600" src="./screen/serv_ready2.png">
+  <img width="1200" height="600" src="./screen/serv_ready2.PNG">
 </p>
 
 ## Задача 4 (*)
