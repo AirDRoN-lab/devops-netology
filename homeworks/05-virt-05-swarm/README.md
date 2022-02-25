@@ -42,6 +42,7 @@ variable "centos-7-base" {
   default = "fe8cp9oofb7nmn29jfcp"
 }
 
+
 ```
 
 Выполняем terrfaorm init, plan и apply (незабываем в плейбуке ансибл сменить package на name, см. предыдущее домашнее задание):
