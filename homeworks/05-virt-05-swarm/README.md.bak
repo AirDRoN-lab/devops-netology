@@ -10,7 +10,7 @@
 
 ### Ответ:
 
-1) Global режим запускает контейнер на каждой из нод (compute). Replcation режим запускает сторогое количество реплик контейнеров (причем контейнеры могут находится на одной ноде).
+1) Global режим запускает контейнер на каждой из compute нод. Replcation режим запускает сторогое количество реплик контейнеров на compute нодах (причем контейнеры могут находится на одной ноде).
 2) Алгоритм RAFT (крайне понятное обьяснение алгоритма http://thesecretlivesofdata.com/raft/).
 3) Overlay-сеть создает подсеть, которую могут использовать контейнеры в разных физичесикх хостах swarm-кластера.  Overlay-сеть использует технологию vxlan, которая инкапсулирует layer 2 фреймы в layer 4 пакеты (UDP/IP). 
 
@@ -19,8 +19,10 @@
 Создать ваш первый Docker Swarm кластер в Яндекс.Облаке
 
 ### Ответ:
-```
 
+Прописываем ключи облака Яндекс: 
+
+```
 dgolodnikov@DESKTOP-V4JG0DR:~/neto_hw01/virt-homeworks/05-virt-05-docker-swarm/src/terraform$ cat variables.tf
 # Заменить на ID своего облака
 # https://console.cloud.yandex.ru/cloud?section=overview
@@ -39,6 +41,11 @@ variable "yandex_folder_id" {
 variable "centos-7-base" {
   default = "fd8cp9oofb7nmn29jfcp"
 }
+
+```
+
+Выполняем terrfaorm init, plan и apply (незабываем в плейбуке ансибл сменить package на name, см. предыдущее домашнее задание):
+```
 
 dgolodnikov@DESKTOP-V4JG0DR:~/neto_hw01/virt-homeworks/05-virt-05-docker-swarm/src/terraform$ terraform apply
 
@@ -70,6 +77,10 @@ kvaq2xzflvzixkbcbiktfuks7     node03.netology.yc   Ready     Active         Reac
 icm6fk805cucx1bejhb4ioxuu     node05.netology.yc   Ready     Active                          20.10.12
 xsxa3r1327cu8ru0m7cvzy216     node06.netology.yc   Ready     Active                          20.10.12
 
+```
+Выполняем ifconfig для проверки наличия интерфейса в overlay сети:
+
+```
 [centos@node01 ~]$ ifconfig
 docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
         inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
@@ -120,7 +131,10 @@ lfemd0drbcwg   swarm_monitoring_prometheus         replicated   1/1        stefa
 ## Задача 4 (*)
 
 Выполнить на лидере Docker Swarm кластера команду (указанную ниже) и дать письменное описание её функционала, что она делает и зачем она нужна:
-# см.документацию: https://docs.docker.com/engine/swarm/swarm_manager_locking/
+см.документацию: https://docs.docker.com/engine/swarm/swarm_manager_locking/
+
+### Ответ:
+После перезагрузки будет включено TLS шифрование в обмене (RAFT) между менеджерами.
 
 ```
 [centos@node01 ~]$ sudo docker swarm update --autolock=true
