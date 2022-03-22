@@ -10,11 +10,18 @@
 Приведите получившуюся команду или docker-compose манифест.
 
 ### Ответ:
-```
 
+Создаем две директории для монтирования (с созданными тестовыми файлами) в контейнер postgres 
+```
+vagrant@server1:~$ mkdir data1
+vagrant@server1:~$ mkdir data2
 vagrant@server1:~$ touch data1/file1
 vagrant@server1:~$ touch data2/file2
 
+```
+
+Подготавливаем doccker-compose файл/манифест и запускаем:
+```
 vagrant@server1:~$ cat dc_postgres_2vol.yml
 #version: "12.10"
 services:
@@ -40,9 +47,16 @@ Creating posgtres_12.10 ... done
 vagrant@server1:~$ docker ps
 CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS      NAMES
 8762b2fe7840   postgres:12.10   "docker-entrypoint.s…"   9 seconds ago   Up 8 seconds   5432/tcp   posgtres_12.10
+```
 
+Заходим внутрь созданного контейнера  posgtres_12.10 (8762b2fe7840):
+
+```
 docker exec -it 8762b2fe7840 bash
+```
+Проверям корректность монтирование 2х volume (смотрим наличие файлов):
 
+```
 root@8762b2fe7840:/mnt# ls -la data{1,2}
 data1:
 total 8
@@ -55,7 +69,10 @@ total 8
 drwxrwxr-x 2 1000 1000 4096 Mar 20 12:33 .
 drwxr-xr-x 1 root root 4096 Mar 20 16:09 ..
 -rw-rw-r-- 1 1000 1000    0 Mar 20 12:33 file2
+```
+Устанавливаем клиент и цепляемся к СУБД:
 
+```
 vagrant@server1:~$ sudo apt-get install postgresql-client
 
 vagrant@server1:~$ psql --version
@@ -97,10 +114,13 @@ postgres=#
 - список пользователей с правами над таблицами test_db
 
 ### Ответ:
+
+Создаем юзеров и проверяем:
+
 ```
  postgres=# CREATE USER "test-admin-user" WITH PASSWORD 'test-admin-user';
  postgres=# CREATE USER "test-simple-user" WITH PASSWORD 'test-simple-user';
- 
+
  postgres=# select * from pg_user;
      usename      | usesysid | usecreatedb | usesuper | userepl | usebypassrls |  passwd  | valuntil | useconfig 
 ------------------+----------+-------------+----------+---------+--------------+----------+----------+-----------
@@ -109,8 +129,11 @@ postgres=#
  test-admin-user  |    16385 | f           | f        | f       | f            | ******** |          | 
  test-simple-user |    16387 | f           | f        | f       | f            | ******** |          | 
 (4 rows)
+```
+Создаем БД test_db и проверяем:
 
- postgres=# CREATE DATABASE test_db;
+```
+postgres=# CREATE DATABASE test_db;
 
 postgres=# select * from pg_database;
   oid  |  datname  | datdba | encoding | datcollate |  datctype  | datistemplate | datallowconn | datconnlimit | datlastsysoid | datfrozenxid | datminmxid | dattablespace |                                 datacl                                  
@@ -120,8 +143,15 @@ postgres=# select * from pg_database;
  13457 | template0 |     10 |        6 | en_US.utf8 | en_US.utf8 | t             | f            |           -1 |         13457 |          480 |          1 |          1663 | {=c/postgres,postgres=CTc/postgres}
  16386 | test_db   |     10 |        6 | en_US.utf8 | en_US.utf8 | f             | t            |           -1 |         13457 |          480 |          1 |          1663 | {=Tc/postgres,postgres=CTc/postgres,"\"test-admin-user\"=CTc/postgres"}
 (4 rows)
+```
+Назначем пользователю test-admin-user паравами администратора на БД test_db:
 
+```
 postgres=# GRANT ALL PRIVILEGES ON DATABASE "test_db" to "test-admin-user";
+```
+Заходим в БД и создаем указанные колонки (с учетом индексов и указанных типов данных). Тип serial для orders(id) по каким-то причинам создать не удалось (вывод ниже). После создание таблиц и колонок проверяем:
+
+```
 postgres=# \c  test_db
 
 CREATE TABLE orders (
@@ -181,9 +211,7 @@ Indexes:
 Referenced by:
     TABLE "clients" CONSTRAINT "clients_zakaz_fkey" FOREIGN KEY (zakaz) REFERENCES orders(id)
 
-test_db=# SELECT  table_name, column_name, data_type 
-FROM information_schema.columns
-WHERE table_name = 'orders';
+test_db=# SELECT  table_name, column_name, data_type FROM information_schema.columns WHERE table_name = 'orders';
 
  table_name | column_name |     data_type     
 ------------+-------------+-------------------
@@ -192,9 +220,7 @@ WHERE table_name = 'orders';
  orders     | cost        | integer
 (3 rows)
 
-test_db=# SELECT  table_name, column_name, data_type 
-FROM information_schema.columns
-WHERE table_name = 'clients';
+test_db=# SELECT  table_name, column_name, data_type FROM information_schema.columns WHERE table_name = 'clients';
 
  table_name | column_name |     data_type     
 ------------+-------------+-------------------
@@ -203,13 +229,17 @@ WHERE table_name = 'clients';
  clients    | country     | character varying
  clients    | zakaz       | integer
 (4 rows)
+```
+Назначем пользователю test-simple-user права на SELECT/INSERT/UPDATE/DELETE на БД test_bd:
 
-
+```
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE orders to "test-simple-user";
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE clients to "test-simple-user";
+```
+Проверяем назначенный права:
 
-test_db=# SELECT table_catalog, table_schema, table_name, privilege_type, grantee
-FROM information_schema.table_privileges WHERE grantee='test-simple-user';
+```
+test_db=# SELECT table_catalog, table_schema, table_name, privilege_type, grantee FROM information_schema.table_privileges WHERE grantee='test-simple-user';
  table_catalog | table_schema | table_name | privilege_type |     grantee      
 ---------------+--------------+------------+----------------+------------------
  test_db       | public       | orders     | INSERT         | test-simple-user
@@ -261,6 +291,8 @@ ERROR:  type "serial" does not exist
 
 ### Ответ:
 
+Наполянем базу данными и проверяем:
+
 ```
 INSERT INTO orders (id, name, cost) VALUES (1, 'Шоколад', 10);
 INSERT INTO orders (id, name, cost) VALUES (2, 'Принтер', 3000);
@@ -292,7 +324,9 @@ test_db=# SELECT * FROM orders;
   4 | Монитор | 7000
   5 | Гитара  | 4000
 (5 rows)
-
+```
+Подсчитываем кол-во строк, данных в таблицах clients и orders :
+```
 test_db=# SELECT COUNT(*) FROM clients;
  count 
 -------
@@ -306,6 +340,7 @@ test_db=# SELECT COUNT(*) FROM orders;
 (1 row)
 
 ```
+
 ## Задача 4
 
 Часть пользователей из таблицы clients решили оформить заказы из таблицы orders.
@@ -322,6 +357,9 @@ test_db=# SELECT COUNT(*) FROM orders;
 Подсказк - используйте директиву `UPDATE`.
 
 ### Ответ:
+
+Выполняем связку двух таблиц clients и orders. Проверяем:
+
 ```
 UPDATE clients SET zakaz='3' WHERE surname='Иванов Иван Иванович'; 
 UPDATE clients SET zakaz='4' WHERE surname='Петров Петр Петрович'; 
@@ -341,6 +379,9 @@ test_db=# SELECT * FROM clients WHERE zakaz IS NOT NULL;
 Приведите получившийся результат и объясните что значат полученные значения.
 
 ### Ответ:
+
+Выполняем команду:
+
 ```
 test_db=# EXPLAIN SELECT *  FROM clients WHERE zakaz IS NOT NULL;
                          QUERY PLAN                         
@@ -355,12 +396,13 @@ test_db=# EXPLAIN SELECT *  FROM clients WHERE zakaz > 0;
  Seq Scan on clients  (cost=0.00..14.38 rows=117 width=204)
    Filter: (zakaz > 0)
 (2 rows)
+```
 
 cost1 - Приблизительная стоимость запуска. Это время, которое проходит, прежде чем начнётся этап вывода данных, например для сортирующего узла это время сортировки.
 cost2 - Приблизительная общая стоимость. Она вычисляется в предположении, что узел плана выполняется до конца, то есть возвращает все доступные строки. На практике родительский узел может досрочно прекратить чтение строк дочернего.
 rows - Ожидаемое число строк, которое должен вывести этот узел плана. При этом так же предполагается, что узел выполняется до конца.
 width - Ожидаемый средний размер строк, выводимых этим узлом плана в байтах.
-```
+
 ## Задача 6
 
 Создайте бэкап БД test_db и поместите его в volume, предназначенный для бэкапов (см. Задачу 1).
@@ -370,6 +412,9 @@ width - Ожидаемый средний размер строк, выводи�
 Приведите список операций, который вы применяли для бэкапа данных и восстановления. 
 
 ### Ответ:
+
+У postgres два инструмента выполнение бекапа, это pg_dump и pg_dumpall. Воспользуемся обоими, запускаем команду внутри контейнера:
+
 ```
 vagrant@server1:~$ docker exec -it 8762b2fe7840 pg_dump -U postgres -f /mnt/data1/test_db.backup test_db
 vagrant@server1:~$ docker exec -it 8762b2fe7840 pg_dumpall -U postgres -f /mnt/data1/dball.backup 
@@ -381,6 +426,11 @@ drwxr-xr-x 9 vagrant vagrant 4096 Mar 20 16:08 ../
 -rw-r--r-- 1 root    root    6373 Mar 22 06:57 dball.backup
 -rw-rw-r-- 1 vagrant vagrant    0 Mar 20 12:33 file1
 -rw-r--r-- 1 root    root    3469 Mar 22 06:57 test_db.backup
+
+```
+Стопарим (docker stop) и удаляем (docker rm) контенер, чтобы создать новый:
+
+```
 
 vagrant@server1:~$ docker-compose -f dc_postgres_2vol.yml up -d
 Creating posgtres ... done
@@ -400,12 +450,17 @@ Password for user postgres:
  template0
 (3 rows)
 
+```
+pg_dump - по умолчанию не переносит ни порльзователей, ни команду на создание указанной БД. Соответсвенно создаем БД и пользователей вручную:
+
+```
 vagrant@server1:~$ psql -h localhost -p 5432 --username=postgres -c "CREATE DATABASE test_db;"
 vagrant@server1:~$ psql -h localhost -p 5432 --username=postgres -c "CREATE USER "test-admin-user" WITH PASSWORD 'test-admin-user'; CREATE USER "test-simple-user" WITH PASSWORD 'test-simple-user'"
 vagrant@server1:~$ psql -h localhost -p 5432 --username=postgres  test_db < data1/test_db.backup
+```
+или проще восстановить дамп из общей БД:
 
-или проще (общий дамп БД)
-
+```
 vagrant@server1:~$ psql -h localhost -p 5432 --username=postgres -f data1/dball.backup 
 Password for user postgres: 
 SET
