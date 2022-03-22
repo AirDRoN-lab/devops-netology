@@ -97,7 +97,7 @@ postgres=#
 - список пользователей с правами над таблицами test_db
 
 ### Ответ:
-
+```
  postgres=# CREATE USER "test-admin-user" WITH PASSWORD 'test-admin-user';
  postgres=# CREATE USER "test-simple-user" WITH PASSWORD 'test-simple-user';
  postgres=# CREATE DATABASE test_db;
@@ -125,7 +125,7 @@ CREATE INDEX country ON clients (country);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE orders to "test-simple-user";
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE clients to "test-simple-user";
-
+```
 
 ## Задача 3
 

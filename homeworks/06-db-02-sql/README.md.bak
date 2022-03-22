@@ -107,7 +107,7 @@ postgres=#
  postgres=# \c  test_db
 
 CREATE TABLE orders (
-    id        SERIAL PRIMARY KEY,
+    id        integer PRIMARY KEY,
     name      varchar(40),
     cost      integer
 );
@@ -121,11 +121,10 @@ CREATE TABLE clients (
 	FOREIGN KEY (zakaz) REFERENCES orders(id)
 );
 
-
 CREATE INDEX country ON clients (country);
 
- GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE orders to "test-simple-user";
- GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE clients to "test-simple-user";
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE orders to "test-simple-user";
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE clients to "test-simple-user";
 
 
 ## Задача 3
