@@ -12,9 +12,8 @@
 ### Ответ:
 ```
 
-vagrant@server1:~$ ll | grep data
-drwxrwxr-x 2 vagrant vagrant  4096 Mar 20 10:27 data1/
-drwxrwxr-x 2 vagrant vagrant  4096 Mar 20 10:27 data2/
+vagrant@server1:~$ touch data1/file1
+vagrant@server1:~$ touch data2/file2
 
 vagrant@server1:~$ cat dc_postgres_2vol.yml
 #version: "12.10"
@@ -40,7 +39,22 @@ Creating posgtres_12.10 ... done
 
 vagrant@server1:~$ docker ps
 CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS      NAMES
-e9366c7bbc54   postgres:12.10   "docker-entrypoint.s…"   9 seconds ago   Up 8 seconds   5432/tcp   posgtres_12.10
+8762b2fe7840   postgres:12.10   "docker-entrypoint.s…"   9 seconds ago   Up 8 seconds   5432/tcp   posgtres_12.10
+
+docker exec -it 8762b2fe7840 bash
+
+root@8762b2fe7840:/mnt# ls -la data{1,2}
+data1:
+total 8
+drwxrwxr-x 2 1000 1000 4096 Mar 20 12:33 .
+drwxr-xr-x 1 root root 4096 Mar 20 16:09 ..
+-rw-rw-r-- 1 1000 1000    0 Mar 20 12:33 file1
+
+data2:
+total 8
+drwxrwxr-x 2 1000 1000 4096 Mar 20 12:33 .
+drwxr-xr-x 1 root root 4096 Mar 20 16:09 ..
+-rw-rw-r-- 1 1000 1000    0 Mar 20 12:33 file2
 
 vagrant@server1:~$ sudo apt-get install postgresql-client
 
@@ -83,6 +97,35 @@ postgres=#
 - список пользователей с правами над таблицами test_db
 
 ### Ответ:
+
+ postgres=# CREATE USER "test-admin-user" WITH PASSWORD 'test-admin-user';
+ postgres=# CREATE USER "test-simple-user" WITH PASSWORD 'test-simple-user';
+ postgres=# CREATE DATABASE test_db;
+ postgres=# GRANT ALL PRIVILEGES ON DATABASE "test_db" to "test-admin-user";
+ 
+
+ postgres=# \c  test_db
+
+CREATE TABLE orders (
+    id        integer PRIMARY KEY,
+    name      varchar(40),
+    cost      integer
+);
+ 
+
+CREATE TABLE clients (
+    id 			SERIAL PRIMARY KEY,
+    surname 	varchar(40),
+    country 	varchar(40),
+    zakaz		integer, 
+	FOREIGN KEY (zakaz) REFERENCES orders(id)
+);
+
+CREATE INDEX country ON clients (country);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE orders to "test-simple-user";
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE clients to "test-simple-user";
+
 
 ## Задача 3
 
