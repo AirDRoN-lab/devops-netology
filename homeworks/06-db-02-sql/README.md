@@ -258,7 +258,31 @@ PS: WTF?
 test_db=# ALTER TABLE orders ALTER COLUMN id TYPE serial;
 ERROR:  type "serial" does not exist
 ```
+Добавлено спустя 1 день
+```
+test_db=# SELECT * FROM orders;
+ id |  name   | cost 
+----+---------+------
+  1 | Шоколад |   10
+  2 | Принтер | 3000
+  3 | Книга   |  500
+  4 | Монитор | 7000
+  5 | Гитара  | 4000
 
+test_db=# CREATE SEQUENCE myserial AS integer START 6 OWNED BY orders.id;
+test_db=# ALTER TABLE orders ALTER COLUMN id SET DEFAULT nextval('myserial');
+test_db=# INSERT INTO orders (name, cost) VALUES ('ESP LTD Deluxe', 10000);
+test_db=# select * from orders;
+ id |      name      | cost  
+----+----------------+-------
+  1 | Шоколад        |    10
+  2 | Принтер        |  3000
+  3 | Книга          |   500
+  4 | Монитор        |  7000
+  5 | Гитара         |  4000
+  6 | ESP LTD Deluxe | 10000
+(6 rows)
+```
 ## Задача 3
 
 Используя SQL синтаксис - наполните таблицы следующими тестовыми данными:
