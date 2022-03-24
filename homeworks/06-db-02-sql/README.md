@@ -258,7 +258,7 @@ PS: WTF?
 test_db=# ALTER TABLE orders ALTER COLUMN id TYPE serial;
 ERROR:  type "serial" does not exist
 ```
-Добавлено спустя 1 день
+Ответ на вопросы выше: 
 ```
 test_db=# SELECT * FROM orders;
  id |  name   | cost 
@@ -271,6 +271,20 @@ test_db=# SELECT * FROM orders;
 
 test_db=# CREATE SEQUENCE myserial AS integer START 6 OWNED BY orders.id;
 test_db=# ALTER TABLE orders ALTER COLUMN id SET DEFAULT nextval('myserial');
+
+test_db=# \d+ orders
+                                                     Table "public.orders"
+ Column |         Type          | Collation | Nullable |            Default            | Storage  | Stats target | Description 
+--------+-----------------------+-----------+----------+-------------------------------+----------+--------------+-------------
+ id     | integer               |           | not null | nextval('myserial'::regclass) | plain    |              | 
+ name   | character varying(40) |           |          |                               | extended |              | 
+ cost   | integer               |           |          |                               | plain    |              | 
+Indexes:
+    "orders_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "clients" CONSTRAINT "clients_zakaz_fkey" FOREIGN KEY (zakaz) REFERENCES orders(id)
+Access method: heap
+
 test_db=# INSERT INTO orders (name, cost) VALUES ('ESP LTD Deluxe', 10000);
 test_db=# select * from orders;
  id |      name      | cost  
