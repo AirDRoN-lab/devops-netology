@@ -258,7 +258,45 @@ PS: WTF?
 test_db=# ALTER TABLE orders ALTER COLUMN id TYPE serial;
 ERROR:  type "serial" does not exist
 ```
+Ответ на вопросы выше: 
+```
+test_db=# SELECT * FROM orders;
+ id |  name   | cost 
+----+---------+------
+  1 | Шоколад |   10
+  2 | Принтер | 3000
+  3 | Книга   |  500
+  4 | Монитор | 7000
+  5 | Гитара  | 4000
 
+test_db=# CREATE SEQUENCE myserial AS integer START 6 OWNED BY orders.id;
+test_db=# ALTER TABLE orders ALTER COLUMN id SET DEFAULT nextval('myserial');
+
+test_db=# \d+ orders
+                                                     Table "public.orders"
+ Column |         Type          | Collation | Nullable |            Default            | Storage  | Stats target | Description 
+--------+-----------------------+-----------+----------+-------------------------------+----------+--------------+-------------
+ id     | integer               |           | not null | nextval('myserial'::regclass) | plain    |              | 
+ name   | character varying(40) |           |          |                               | extended |              | 
+ cost   | integer               |           |          |                               | plain    |              | 
+Indexes:
+    "orders_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "clients" CONSTRAINT "clients_zakaz_fkey" FOREIGN KEY (zakaz) REFERENCES orders(id)
+Access method: heap
+
+test_db=# INSERT INTO orders (name, cost) VALUES ('ESP LTD Deluxe', 10000);
+test_db=# select * from orders;
+ id |      name      | cost  
+----+----------------+-------
+  1 | Шоколад        |    10
+  2 | Принтер        |  3000
+  3 | Книга          |   500
+  4 | Монитор        |  7000
+  5 | Гитара         |  4000
+  6 | ESP LTD Deluxe | 10000
+(6 rows)
+```
 ## Задача 3
 
 Используя SQL синтаксис - наполните таблицы следующими тестовыми данными:
@@ -451,7 +489,8 @@ Password for user postgres:
 (3 rows)
 
 ```
-pg_dump - по умолчанию не переносит ни порльзователей, ни команду на создание указанной БД. Соответсвенно создаем БД и пользователей вручную:
+pg_dump - по умолчанию не переносит ни пользователей, ни команду на создание указанной БД. Соответсвенно создаем БД и пользователей вручную (см. ниже).
+Для создания базы необходимо использовать ключ -С при выполнении pg_dump. Список пользователей необходимо дампить отдельно, используя таблицу information_schema.table_privilege.
 
 ```
 vagrant@server1:~$ psql -h localhost -p 5432 --username=postgres -c "CREATE DATABASE test_db;"
@@ -564,4 +603,5 @@ GRANT
 GRANT
 ```
 PS:
-Создание pg_dump c автоматическим созданием БД и необходимых пользователей?
+Создание pg_dump c автоматическим созданием БД и необходимых пользователей? 
+Для исключения проблем с дублированием необходимо использовать ключ -c, для создания базы ключ -С. Ключ -с удаляем значения перед созданием. 
