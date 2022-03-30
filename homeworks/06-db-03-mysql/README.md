@@ -342,4 +342,6 @@ Enter password:
 ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
 
 vagrant@server1:/backupdb$ mysql -h localhost -u root -p test_db
+Enter password: 
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
 
