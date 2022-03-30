@@ -294,3 +294,52 @@ innodb_log_file_size = 104857600
 ```
 PS: документация https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_compression_level
 
+
+## Проблема 
+
+Процесс запуска контейнера с пробросовм порта и проверке telnet на порты 3306 и 3306. Все ок:
+```
+vagrant@server1:/backupdb$ docker ps
+CONTAINER ID   IMAGE            COMMAND                  CREATED      STATUS      PORTS                                                                                      NAMES
+f9ab4a5a7658   mysql:8.0.28     "docker-entrypoint.s…"   2 days ago   Up 2 days   **0.0.0.0:3306->3306/tcp, :::3306->3306/tcp, 0.0.0.0:33060->33060/tcp, :::33060->33060/tcp**   dockermysql
+c7de3c539b5b   postgres:12.10   "docker-entrypoint.s…"   8 days ago   Up 5 days   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp                                                  posgtres
+
+vagrant@server1:/backupdb$ netstat -nlpt
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:33060           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:5432            0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::33060                :::*                    LISTEN      -                   
+tcp6       0      0 :::3306                 :::*                    LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      -                   
+tcp6       0      0 :::5432                 :::*                    LISTEN      -    
+
+
+vagrant@server1:/backupdb$ telnet localhost 3306
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+
+8.0.28_b
+
+vagrant@server1:/backupdb$ telnet localhost 33060
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+                                                                                                                                                                       XshellXshell
+
+```
+
+При этом к базе не прицепляется, лезет в файл сокета:
+```
+vagrant@server1:/backupdb$ mysql -uroot -p
+Enter password: 
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+
+vagrant@server1:/backupdb$ mysql -h localhost -u root -p test_db
+
