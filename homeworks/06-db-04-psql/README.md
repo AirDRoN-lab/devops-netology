@@ -15,9 +15,9 @@
 
 ### Ответ
 
+Создаем контейнер postgres:latest (ошибочно выбран latest, т.к. предполагалась версия 13).
+
 ```
-vagrant@server1:~/data1$ docr run --name pgdb -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres:latest
--bash: docr: command not found
 vagrant@server1:~/data1$ docker run --name pgdb -p 5432:5432 -v /home/vagrant/data1:/mnt/data1 -e POSTGRES_PASSWORD=password -d postgres:latest
 537d7d0d7684c15f3b57f6da906aee3ee3d8960c59a3b372403d487830c030c7
 vagrant@server1:~/data1$ docker ps
@@ -32,25 +32,25 @@ WARNING: psql major version 12, server major version 14.
 Type "help" for help.
 ```
 
-- вывода списка БД
+Команда для вывода списка БД
 ```
   \l[+]   [PATTERN]      list databases
 ```
-- подключения к БД
+Команда дляподключения к БД
 ```
 \c[onnect] {[DBNAME|- USER|- HOST|- PORT|-] | conninfo}
                          connect to new database (currently "postgres")
 ```
-- вывода списка таблиц
+Команда для вывода списка таблиц
 ``` 
 \d[S+]                 list tables, views, and sequences
 \dt[S+] [PATTERN]      list tables
 ```
-- вывода описания содержимого таблиц
+Команда длявывода описания содержимого таблиц
 ```
 \d[S+]  NAME           describe table, view, sequence, or index
 ```
-- выхода из psql
+Команда для выхода из psql
 ```
 \q                     quit psql
 ```
@@ -66,6 +66,9 @@ Type "help" for help.
 с наибольшим средним значением размера элементов в байтах.
 **Приведите в ответе** команду, которую вы использовали для вычисления и полученный результат.
 
+### Ответ
+
+Восстанавливаем таблицу из дампа:
 ```
 vagrant@server1:~/data1$ psql -h localhost -p 5432 --username=postgres  test_database < test_dump.sql 
 Password for user postgres: 
@@ -99,6 +102,9 @@ COPY 8
 
 ALTER TABLE
 
+```
+Заходим в контейнер:
+```
 vagrant@server1:~/data1$ docker exec -it pgdb bash
 root@537d7d0d7684:/# psql
 psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  role "root" does not exist
@@ -106,6 +112,9 @@ root@537d7d0d7684:/# psql -U postgres
 psql (14.2 (Debian 14.2-1.pgdg110+1))
 Type "help" for help.
 
+```
+Цепляемся к БД, проверяем:
+```
 postgres=# \c test_database
 You are now connected to database "test_database" as user "postgres".
 
@@ -115,7 +124,6 @@ test_database=# \dt+
 --------+--------+-------+----------+-------------+---------------+------------+-------------
  public | orders | table | postgres | permanent   | heap          | 8192 bytes | 
 (1 row)
-
 
 test_database=# SELECT * from orders;
  id |        title         | price 
@@ -130,13 +138,20 @@ test_database=# SELECT * from orders;
   8 | Dbiezdmin            |   501
 (8 rows)
 
-
+```
+Выполняем тест с помощью ANALYZE согласно задания:
+```
 test_database=# ANALYZE VERBOSE orders;
 INFO:  analyzing "public.orders"
 INFO:  "orders": scanned 1 of 1 pages, containing 8 live rows and 0 dead rows; 8 rows in sample, 8 estimated total rows
 ANALYZE
 test_database=#
 
+```
+Выполняем поиск максимального столбца в байтах в таблице orders двумя способами (первым и похитрее):
+
+1)
+```
 test_database=#  
 SELECT tablename, attname ,avg_width FROM pg_stats WHERE tablename = 'orders';
  tablename | attname | avg_width 
@@ -146,7 +161,6 @@ SELECT tablename, attname ,avg_width FROM pg_stats WHERE tablename = 'orders';
  orders    | price   |         4
 (3 rows)
 
-
 test_database=#  
 SELECT tablename, attname , avg_width FROM pg_stats WHERE tablename = 'orders' ORDER BY avg_width DESC LIMIT 1;
  tablename | attname | avg_width 
@@ -154,8 +168,7 @@ SELECT tablename, attname , avg_width FROM pg_stats WHERE tablename = 'orders' O
  orders    | title   |        16
 (1 row)
 ```
-
-или похитрее
+2)
 ```
 test_database=#                  
 SELECT tablename, attname , avg_width FROM pg_stats WHERE tablename = 'orders' AND avg_width = (SELECT MAX(avg_width) from pg_stats WHERE tablename = 'orders');
@@ -164,8 +177,6 @@ SELECT tablename, attname , avg_width FROM pg_stats WHERE tablename = 'orders' A
  orders    | title   |        16
 (1 row)
 ```
-
-### Ответ
 
 ## Задача 3
 
