@@ -106,8 +106,6 @@ ALTER TABLE
 Заходим в контейнер:
 ```
 vagrant@server1:~/data1$ docker exec -it pgdb bash
-root@537d7d0d7684:/# psql
-psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  role "root" does not exist
 root@537d7d0d7684:/# psql -U postgres
 psql (14.2 (Debian 14.2-1.pgdg110+1))
 Type "help" for help.
