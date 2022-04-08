@@ -351,5 +351,13 @@ ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run
 Вместо localhost использовать 127.0.0.1:
 ```
 vagrant@server1:/etc/mysql/conf.d$ mysql -h 127.0.0.1 -u root test_db
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.28 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
 ```
 
