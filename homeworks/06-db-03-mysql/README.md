@@ -345,3 +345,10 @@ vagrant@server1:/backupdb$ mysql -h localhost -u root -p test_db
 Enter password: 
 ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
 
+### Ответ
+
+Вместо localhost использовать 127.0.0.1:
+```
+vagrant@server1:/etc/mysql/conf.d$ mysql -h 127.0.0.1 -u root test_db
+```
+
