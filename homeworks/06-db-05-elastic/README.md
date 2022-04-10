@@ -112,6 +112,49 @@ su - elasticsearch -c "/elasticsearch-8.1.2/bin/elasticsearch -d"
 {"cluster_name":"elasticsearch","status":"green","timed_out":false,"number_of_nodes":1,"number_of_data_nodes":1,"active_primary_shards":1,"active_shards":1,"relocating_shards":0,"initializing_shards":0,"unassigned_shards":0,"delayed_unassigned_shards":0,"number_of_pending_tasks":0,"number_of_in_flight_fetch":0,"task_max_waiting_in_queue_millis":0,"active_shards_percent_as_number":100.0}
 ```
 
+Приступаем к сборке контейнера, формируем Docker файл вида:
+```
+vagrant@server1:~$ cat Dockerfile
+FROM centos:latest
+
+RUN cd /etc/yum.repos.d/
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+#RUN yum update -y
+RUN yum install -y wget
+RUN wget https://fossies.org/linux/www/elasticsearch-8.1.2-linux-x86_64.tar.gz
+RUN tar -xzf elasticsearch-8.1.2-linux-x86_64.tar.gz
+RUN echo "node.name: netology.test" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+RUN echo "path.data: /var/lib/elastic" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+RUN echo "xpack.security.enabled: false" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+RUN echo "xpack.security.enrollment.enabled: false" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+RUN echo "xpack.security.http.ssl.enabled: false" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+RUN echo "xpack.security.transport.ssl.enabled: false" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+
+RUN groupadd elasticsearch
+RUN useradd elasticsearch -g elasticsearch -p elasticsearch
+RUN mkdir /var/lib/elastic
+RUN chown -R elasticsearch:elasticsearch /elasticsearch-8.1.2 /var/lib/elastic
+RUN chmod o+x /elasticsearch-8.1.2 /var/lib/elastic
+RUN chgrp elasticsearch /elasticsearch-8.1.2 /var/lib/elastic
+
+RUN su - elasticsearch -c "/elasticsearch-8.1.2/bin/elasticsearch -d"
+```
+
+Выполняем сборку:
+```
+DOCKER_BUILDKIT=0 docker build -t dgolodnikov/elasticsearch_devtest:1.0.0 .
+
+vagrant@server1:~$ docker image list | grep elastic
+dgolodnikov/elasticsearch_devtest   1.0.0     9a0014b6579d   14 hours ago   2.99GB
+```
+
+Запускаем:
+```
+docker run -it --name lasta -p 9200:9200 dgolodnikov/elasticsearch_devtest:1.0.0 lasta
+```
+
+
 PS: для запуска с сертификатом (пароль на пользователя elastic указывается при запуске)
 ```
 [root@470df12af342 /]# curl --cacert /elasticsearch-8.1.2/config/certs/http_ca.crt -u elastic:password https://localhost:9200
