@@ -151,7 +151,7 @@ dgolodnikov/elasticsearch_devtest   1.0.0     9a0014b6579d   14 hours ago   2.99
 
 Запускаем:
 ```
-docker run -it dgolodnikov/elasticsearch_devtest:1.0.0 lasta
+docker run -it --name lasta -p 9200:9200 dgolodnikov/elasticsearch_devtest:1.0.0 lasta
 ```
 
 
