@@ -222,8 +222,20 @@ Enter host password for user 'elastic':
   },
   "tagline" : "You Know, for Search"
 }
-
 ```
+
+Не применился параметр vm.max_map_count:
+```
+[root@4e2403202eaf /]# sysctl -a | grep max_map
+sysctl: reading key "kernel.unprivileged_userns_apparmor_policy"
+vm.max_map_count = 65530
+```
+Но при этом:
+```
+[root@4e2403202eaf /]# cat /etc/sysctl.conf | grep map
+vm.max_map_count = 262144
+```
+Причина пока не ясна =)
 
 ## Задача 2
 
