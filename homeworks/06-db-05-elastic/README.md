@@ -183,8 +183,25 @@ vagrant@server1:~$ curl localhost:9200
 }
 vagrant@server1:~$ curl localhost:9200/_cat/shards
 .geoip_databases 0 p STARTED   172.17.0.2 netology.test
-vagrant@server1:~$ curl localhost:9200/_cluster/health
-{"cluster_name":"elasticsearch","status":"green","timed_out":false,"number_of_nodes":1,"number_of_data_nodes":1,"active_primary_shards":1,"active_shards":1,"relocating_shards":0,"initializing_shards":0,"unassigned_shards":0,"delayed_unassigned_shards":0,"number_of_pending_tasks":0,"number_of_in_flight_fetch":0,"task_max_waiting_in_queue_millis":0,"active_shards_percent_as_number":100.0}
+
+vagrant@server1:~$ curl -X GET "localhost:9200/_cluster/health?pretty"
+{
+  "cluster_name" : "elasticsearch",
+  "status" : "green",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 1,
+  "active_shards" : 1,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 0,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 100.0
+}
 ```
 
 Выполняем docker push на докерхаб, согласно задания. 
@@ -366,6 +383,25 @@ vagrant@server1:~$ curl -X GET "localhost:9200/ind-1,ind-2,ind-3?pretty"
   }
 }
 
+
+vagrant@server1:~$ curl -X GET "localhost:9200/_cluster/health?pretty"
+{
+  "cluster_name" : "elasticsearch",
+  "status" : "yellow",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 8,
+  "active_shards" : 8,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 10,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 44.44444444444444
+}
 
 vagrant@server1:~$ curl -X GET "localhost:9200/_nodes?pretty"
 {
