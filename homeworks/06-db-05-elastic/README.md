@@ -130,6 +130,11 @@ RUN echo "xpack.security.enabled: false" >> /elasticsearch-8.1.2/config/elastics
 RUN echo "xpack.security.enrollment.enabled: false" >> /elasticsearch-8.1.2/config/elasticsearch.yml
 RUN echo "xpack.security.http.ssl.enabled: false" >> /elasticsearch-8.1.2/config/elasticsearch.yml
 RUN echo "xpack.security.transport.ssl.enabled: false" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+RUN echo "network.host: 0.0.0.0" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+RUN echo "discovery.type: single-node" >> /elasticsearch-8.1.2/config/elasticsearch.yml
+
+# т.к. elastic сам просит "max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]" добавим:
+RUN echo "vm.max_map_count = 262144" >> /etc/sysctl.conf 
 
 RUN groupadd elasticsearch
 RUN useradd elasticsearch -g elasticsearch -p elasticsearch
@@ -137,8 +142,7 @@ RUN mkdir /var/lib/elastic
 RUN chown -R elasticsearch:elasticsearch /elasticsearch-8.1.2 /var/lib/elastic
 RUN chmod o+x /elasticsearch-8.1.2 /var/lib/elastic
 RUN chgrp elasticsearch /elasticsearch-8.1.2 /var/lib/elastic
-
-RUN su - elasticsearch -c "/elasticsearch-8.1.2/bin/elasticsearch -d"
+#RUN su - elasticsearch -c "/elasticsearch-8.1.2/bin/elasticsearch -d" # всеравно не работает. Запускать контейнер требуется с этой командой
 ```
 
 Выполняем сборку:
