@@ -155,7 +155,7 @@ dgolodnikov/elasticsearch_devtest   1.0.0     9a0014b6579d   14 hours ago   2.99
 
 Запускаем:
 ```
-vagrant@server1:~$ docker run -it --name lasta -p 9200:9200 dgolodnikov/elasticsearch_devtest:1.0.0 lasta
+vagrant@server1:~$ docker run -it --name lasta -p 9200:9200 -p 9300:9300 dgolodnikov/elasticsearch_devtest:1.0.1 'su - elasticsearch -c "/elasticsearch-8.1.2/bin/elasticsearch -d"'
 ```
 
 
