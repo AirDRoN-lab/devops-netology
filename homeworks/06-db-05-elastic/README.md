@@ -575,6 +575,14 @@ health status index  uuid                   pri rep docs.count docs.deleted stor
 green  open   test-2 0gEIXCwUQRaAAu9MgWqQeA   1   0          0            0       225b           225b
 ```
 
+Выполняем восстанавление из бекапа:
+```
+vagrant@server1:~$ curl -X POST "localhost:9200/_snapshot/netology_backup/my_snapshot/_restore?pretty" -H 'Content-Type: application/json' -d' { "indices": "*", "include_global_state": true } '
+{
+  "accepted" : true
+}
+```
+
 Проверяем список индексов и видем два индекса. Один созданный test-2 и восстановленный из бекапа. Все ОК!:
 ```
 vagrant@server1:~$ curl -X GET "localhost:9200/_cat/indices?v=true"
