@@ -273,12 +273,10 @@ Enter host password for user 'elastic':
 иначе возможна потеря данных индексов, вплоть до полной, при деградации системы.
 
 ## Ответ
+
+Создаем 3 индекса ind-1, ind-2, ind-3:
+
 ```
-curl -X PUT "localhost:9200/ind-1?pretty" -H 'Content-Type: application/json' -d'{"settings": {"index": {"number_of_shards": 1,  "number_of_replicas": 0 }}}'
-curl -X PUT "localhost:9200/ind-2?pretty" -H 'Content-Type: application/json' -d'{"settings": {"index": {"number_of_shards": 2,  "number_of_replicas": 1 }}}'
-curl -X PUT "localhost:9200/ind-3?pretty" -H 'Content-Type: application/json' -d'{"settings": {"index": {"number_of_shards": 4,  "number_of_replicas": 2 }}}'
-
-
 vagrant@server1:~$ curl -X PUT "localhost:9200/ind-1?pretty" -H 'Content-Type: application/json' -d'{"settings": {"index": {"number_of_shards": 1,  "number_of_replicas": 0 }}}'
 {
   "acknowledged" : true,
@@ -297,8 +295,10 @@ vagrant@server1:~$ curl -X PUT "localhost:9200/ind-3?pretty" -H 'Content-Type: a
   "shards_acknowledged" : true,
   "index" : "ind-3"
 }
+```
 
-
+Проверяем создаение индексов:
+```
 vagrant@server1:~$ curl -X GET "localhost:9200/ind-1,ind-2,ind-3?pretty"
 {
   "ind-1" : {
@@ -372,7 +372,9 @@ vagrant@server1:~$ curl -X GET "localhost:9200/ind-1,ind-2,ind-3?pretty"
   }
 }
 
-
+```
+Проверяем состояние кластера. 
+```
 vagrant@server1:~$ curl -X GET "localhost:9200/_cluster/health?pretty"
 {
   "cluster_name" : "elasticsearch",
@@ -391,7 +393,9 @@ vagrant@server1:~$ curl -X GET "localhost:9200/_cluster/health?pretty"
   "task_max_waiting_in_queue_millis" : 0,
   "active_shards_percent_as_number" : 44.44444444444444
 }
-
+```
+Удаляем все индексы: 
+```
 vagrant@server1:~$ curl -X DELETE "localhost:9200/ind-1,ind-2,ind-3?pretty"
 {
   "acknowledged" : true
