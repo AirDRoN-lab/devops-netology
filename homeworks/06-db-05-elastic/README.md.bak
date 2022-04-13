@@ -120,7 +120,7 @@ FROM centos:latest
 RUN cd /etc/yum.repos.d/
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-#RUN yum update -y
+#RUN yum update -y # не будем обновлять, и так не старое
 RUN yum install -y wget
 RUN wget https://fossies.org/linux/www/elasticsearch-8.1.2-linux-x86_64.tar.gz
 RUN tar -xzf elasticsearch-8.1.2-linux-x86_64.tar.gz
@@ -143,7 +143,7 @@ RUN su - elasticsearch -c "/elasticsearch-8.1.2/bin/elasticsearch -d"
 
 Выполняем сборку:
 ```
-DOCKER_BUILDKIT=0 docker build -t dgolodnikov/elasticsearch_devtest:1.0.0 .
+vagrant@server1:~$ DOCKER_BUILDKIT=0 docker build -t dgolodnikov/elasticsearch_devtest:1.0.0 .
 
 vagrant@server1:~$ docker image list | grep elastic
 dgolodnikov/elasticsearch_devtest   1.0.0     9a0014b6579d   14 hours ago   2.99GB
@@ -151,7 +151,7 @@ dgolodnikov/elasticsearch_devtest   1.0.0     9a0014b6579d   14 hours ago   2.99
 
 Запускаем:
 ```
-docker run -it --name lasta -p 9200:9200 dgolodnikov/elasticsearch_devtest:1.0.0 lasta
+vagrant@server1:~$ docker run -it --name lasta -p 9200:9200 dgolodnikov/elasticsearch_devtest:1.0.0 lasta
 ```
 
 
