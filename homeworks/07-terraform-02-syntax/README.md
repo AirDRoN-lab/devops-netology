@@ -74,10 +74,78 @@ https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
        * Идентификатор подсети в которой создан инстанс.  
 7. Если вы выполнили первый пункт, то добейтесь того, что бы команда `terraform plan` выполнялась без ошибок. 
 
-
 В качестве результата задания предоставьте:
 1. Ответ на вопрос: при помощи какого инструмента (из разобранных на прошлом занятии) можно создать свой образ ami?
 1. Ссылку на репозиторий с исходной конфигурацией терраформа.  
+
+### Ответ.
+
+   Для создания собственного образа (не только ami) можно использовать Packer от HashiCorp. В домашнем задании используеется один из штатных обланчных образов.
+   
+   Конфигурация терраформа приведена по ссылке ниже:
+ https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
  
+   Результат выполнения terraform apply:
 
+```
+yandex_vpc_network.network-1: Creating...
+yandex_vpc_network.network-1: Creation complete after 3s [id=enp1h7sdftf97t7rlm17]
+yandex_vpc_subnet.subnet-1: Creating...
+yandex_vpc_subnet.subnet-1: Creation complete after 1s [id=e9buu8ssdfth5oeqqk1k]
+yandex_compute_instance.vm-1: Creating...
+yandex_compute_instance.vm-1: Still creating... [10s elapsed]
+yandex_compute_instance.vm-1: Still creating... [20s elapsed]
+yandex_compute_instance.vm-1: Still creating... [30s elapsed]
+yandex_compute_instance.vm-1: Still creating... [40s elapsed]
+yandex_compute_instance.vm-1: Still creating... [50s elapsed]
+yandex_compute_instance.vm-1: Still creating... [1m0s elapsed]
+yandex_compute_instance.vm-1: Still creating... [1m10s elapsed]
+yandex_compute_instance.vm-1: Still creating... [1m20s elapsed]
+yandex_compute_instance.vm-1: Still creating... [1m30s elapsed]
+yandex_compute_instance.vm-1: Creation complete after 1m32s [id=fhmc7phjjsldsfttp6p4m]
 
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+external_ip_address_vm_1 = "51.250.85.111"
+internal_ip_address_vm_1 = "192.168.250.22"
+
+vagrant@server1:~/devops-netology/terraform$ ssh 51.250.85.111
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+vagrant@fhmc7phjjsasddttp6p4m:~$ 
+
+vagrant@server1:~/devops-netology/terraform$ yc compute instance list --format=yaml
+- id: fhmc7phjjsasdAAtp6p4m
+  folder_id: b1gtasdgg4lf9jgalt0p
+  created_at: "2022-04-18T08:03:13Z"
+  name: terraform
+  zone_id: ru-central1-a
+  platform_id: standard-v1
+  resources:
+    memory: "2147483648"
+    cores: "2"
+    core_fraction: "100"
+  status: RUNNING
+  boot_disk:
+    mode: READ_WRITE
+    device_name: fhminlasfgthaiq4g64
+    auto_delete: true
+    disk_id: fhminlcadbthaiq4g64
+  network_interfaces:
+  - index: "0"
+    mac_address: d0:0d:c3:e6:33:9f
+    subnet_id: e9basdjth5oeqqk1k
+    primary_v4_address:
+      address: 192.168.250.22
+      one_to_one_nat:
+        address: 51.250.85.111
+        ip_version: IPV4
+  fqdn: fhmc7phjsdfdttp6p4m.auto.internal
+  scheduling_policy: {}
+  network_settings:
+    type: STANDARD
+  placement_policy: {}
+```
