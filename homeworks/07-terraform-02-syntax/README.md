@@ -41,8 +41,11 @@ AWS предоставляет достаточно много бесплатн�
 
 Токен и Cloud id берется их переменных окружения (значения изменены). 
 ```
-export TF_VAR_yc_token=afgafgaasfgadgagafdgasfdgsafgafg-Kg
+export TF_VAR_yc_token=afgafgaasfgadgagafdgasfdgsafgafg-Kg 
 export TF_VAR_yc_cloud_id=afdgafsdgadfgasfdgaf
+или 
+export TF_VAR_yc_token=`yc config list | grep token | awk '{print $2}'`
+export TF_VAR_yc_cloud_id=`yc config list | grep cloud_id | awk '{print $2}'`
 ```
 Конфиг файлы ниже:
 https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
