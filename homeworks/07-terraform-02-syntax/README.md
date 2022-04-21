@@ -50,6 +50,11 @@ export TF_VAR_yc_cloud_id=`yc config list | grep cloud_id | awk '{print $2}'`
 Конфиг файлы ниже:
 https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
 
+Доступные образы в YaCloud:
+```
+yc compute image list --folder-id standard-images
+```
+
 ## Задача 2. Создание aws ec2 или yandex_compute_instance через терраформ. 
 
 1. В каталоге `terraform` вашего основного репозитория, который был создан в начале курсе, создайте файл `main.tf` и `versions.tf`.
