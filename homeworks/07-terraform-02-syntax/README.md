@@ -85,12 +85,13 @@ https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
 
    Для создания собственного образа (не только ami) можно использовать Packer от HashiCorp. В домашнем задании используеется один из штатных обланчных образов.
    
-   Конфигурация терраформа приведена по ссылке ниже:
+   Конфигурация терраформа приведена по ссылке:
  https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
  
    Результат выполнения terraform apply:
 
 ```
+vagrant@server1:~/devops-netology/terraform$ terraform apply
 yandex_vpc_network.network-1: Creating...
 yandex_vpc_network.network-1: Creation complete after 3s [id=enp1h7sdftf97t7rlm17]
 yandex_vpc_subnet.subnet-1: Creating...
@@ -113,13 +114,18 @@ Outputs:
 
 external_ip_address_vm_1 = "51.250.85.111"
 internal_ip_address_vm_1 = "192.168.250.22"
-
+```
+SSH доступ есть:
+```
 vagrant@server1:~/devops-netology/terraform$ ssh 51.250.85.111
 To run a command as administrator (user "root"), use "sudo <command>".
 See "man sudo_root" for details.
 
 vagrant@fhmc7phjjsasddttp6p4m:~$ 
 
+```
+Описание созданной инфраструктуры (в yaml):
+```
 vagrant@server1:~/devops-netology/terraform$ yc compute instance list --format=yaml
 - id: fhmc7phjjsasdAAtp6p4m
   folder_id: b1gtasdgg4lf9jgalt0p
@@ -152,3 +158,4 @@ vagrant@server1:~/devops-netology/terraform$ yc compute instance list --format=y
     type: STANDARD
   placement_policy: {}
 ```
+PS: AWS облаков в процессе получения. Возможно домашка будет дорабаота в части работы с AWS =)
