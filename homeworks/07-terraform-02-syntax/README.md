@@ -93,6 +93,8 @@ yc compute image list --folder-id standard-images
    Конфигурация терраформа приведена по ссылке:
  https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
  
+   В outputs.tf поместил данные по IP адресации, зоне, дате создания VM и идентификаторы сети и подсети.
+ 
    Результат выполнения terraform apply:
 
 ```
@@ -117,24 +119,29 @@ Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-external_ip_address_vm_1 = "51.250.85.111"
-internal_ip_address_vm_1 = "192.168.250.22"
+created_at_vm_1 = "2022-04-21T05:46:21Z"
+external_ip_address_vm_1 = "51.250.83.0"
+internal_ip_address_vm_1 = "192.168.250.6"
+network_vm_1 = "enpmabmvk51ma71qcm5a"
+subnet_vm_1 = "e9bd0gj2in2vhfgib3d0"
+zone = "ru-central1-a"
+
 ```
 SSH доступ есть:
 ```
-vagrant@server1:~/devops-netology/terraform$ ssh 51.250.85.111
+vagrant@server1:~/devops-netology/terraform$ ssh 51.250.83.0
 To run a command as administrator (user "root"), use "sudo <command>".
 See "man sudo_root" for details.
 
-vagrant@fhmc7phjjsasddttp6p4m:~$ 
+vagrant@fhmdvq6skoqrgjv5m35h:~$ 
 
 ```
 Описание созданной инфраструктуры (в yaml):
 ```
-vagrant@server1:~/devops-netology/terraform$ yc compute instance list --format=yaml
-- id: fhmc7phjjsasdAAtp6p4m
-  folder_id: b1gtasdgg4lf9jgalt0p
-  created_at: "2022-04-18T08:03:13Z"
+vagrant@server1:~/devops-netology/terraform$   yc compute instance list --format=yaml
+- id: fhmg8vjds9omer0m4ujk
+  folder_id: b1gtp2cog4lf9jgalt0p
+  created_at: "2022-04-21T05:46:21Z"
   name: terraform
   zone_id: ru-central1-a
   platform_id: standard-v1
@@ -145,19 +152,19 @@ vagrant@server1:~/devops-netology/terraform$ yc compute instance list --format=y
   status: RUNNING
   boot_disk:
     mode: READ_WRITE
-    device_name: fhminlasfgthaiq4g64
+    device_name: fhmdvq6skoqrgjv5m35h
     auto_delete: true
-    disk_id: fhminlcadbthaiq4g64
+    disk_id: fhmdvq6skoqrgjv5m35h
   network_interfaces:
   - index: "0"
-    mac_address: d0:0d:c3:e6:33:9f
-    subnet_id: e9basdjth5oeqqk1k
+    mac_address: d0:0d:10:47:e6:de
+    subnet_id: e9bd0gj2in2vhfgib3d0
     primary_v4_address:
-      address: 192.168.250.22
+      address: 192.168.250.6
       one_to_one_nat:
-        address: 51.250.85.111
+        address: 51.250.83.0
         ip_version: IPV4
-  fqdn: fhmc7phjsdfdttp6p4m.auto.internal
+  fqdn: fhmg8vjds9omer0m4ujk.auto.internal
   scheduling_policy: {}
   network_settings:
     type: STANDARD
