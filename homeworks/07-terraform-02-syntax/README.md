@@ -48,7 +48,7 @@ export TF_VAR_yc_token=`yc config list | grep token | awk '{print $2}'`
 export TF_VAR_yc_cloud_id=`yc config list | grep cloud_id | awk '{print $2}'`
 ```
 Конфиг файлы ниже:
-https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
+https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform/YandexC_backup
 
 Доступные образы в YaCloud:
 ```
@@ -91,7 +91,7 @@ yc compute image list --folder-id standard-images
    Для создания собственного образа (не только ami) можно использовать Packer от HashiCorp. В домашнем задании используеется один из штатных обланчных образов.
    
    Конфигурация терраформа приведена по ссылке:
- https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform
+ https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform/YandexC_backup
  
    В outputs.tf поместил данные по IP адресации, зоне, дате создания VM и идентификаторы сети и подсети.
  
@@ -171,3 +171,74 @@ vagrant@server1:~/devops-netology/terraform$   yc compute instance list --format
   placement_policy: {}
 ```
 PS: AWS облаков в процессе получения. Возможно домашка будет дорабаота в части работы с AWS =)
+
+### Ответ (кратко для AWS обе задачи)
+
+Установка AWS (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
+
+```
+$ curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
+
+Присвоение ключей (ключи изменены):
+```
+$ export AWS_ACCESS_KEY_ID=AXXXXXXXXXXXXXXDSPIMQ2
+$ export AWS_SECRET_ACCESS_KEY=/QXXXXXXXXXXXXXXXXXXXXXXXXXXXPQlP/D
+
+vagrant@server1:~/.aws$ aws configure list
+      Name                    Value             Type    Location
+      ----                    -----             ----    --------
+   profile                  default              env    ['AWS_PROFILE', 'AWS_DEFAULT_PROFILE']
+access_key     ****************IMQ2              env
+secret_key     ****************lP/D              env
+    region                us-east-1      config-file    ~/.aws/config
+
+```
+Конфиг файлы для AWS ниже:
+https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform/AWS_backup
+
+Вывод terraform output:
+
+```
+vagrant@server1:~/devops-netology/terraform$ terraform refresh
+aws_instance.netolo: Refreshing state... [id=i-0dd30ccf6d497186b]
+
+Outputs:
+
+AZ_names = tolist([
+  "us-east-1a",
+  "us-east-1b",
+  "us-east-1c",
+  "us-east-1d",
+  "us-east-1e",
+  "us-east-1f",
+])
+account_id = "297667789469"
+image_id = "ami-0c4f7023847b90238"
+instance_core = 1
+instance_ip_addr = "172.31.16.174"
+instance_ip_public_addr = "18.208.248.207"
+regions_id = "aws"
+regions_names = toset([
+  "ap-northeast-1",
+  "ap-northeast-2",
+  "ap-northeast-3",
+  "ap-south-1",
+  "ap-southeast-1",
+  "ap-southeast-2",
+  "ca-central-1",
+  "eu-central-1",
+  "eu-north-1",
+  "eu-west-1",
+  "eu-west-2",
+  "eu-west-3",
+  "sa-east-1",
+  "us-east-1",
+  "us-east-2",
+  "us-west-1",
+  "us-west-2",
+])
+subnet_id = "subnet-0233fe9108df5be14"
+```
