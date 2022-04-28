@@ -568,7 +568,8 @@ Changes to Outputs:
 https://github.com/AirDRoN-lab/devops-netology/tree/main/terraform/AWS_HW_07_03
 
 PS: Проблема с Outputs.
-Если для resource `"aws_instance" "netolo"` (где используется count) можно написать переменную в виде `aws_instance.netolo[*].private_ip`, то для `"aws_instance" "netolo_node2"` (где используется конструкция с for_each, см. выше) конструкция уже не работает (см. ниже). Конечно можно писать конкретные значения в `[]`, но мы же хотим вывод всех значений атрибута для всех инстансов. Вопрос пока открыт.
+Если для resource `"aws_instance" "netolo"` (где используется count) можно написать переменную в виде `aws_instance.netolo[*].private_ip`, то для `"aws_instance" "netolo_node2"` (где используется конструкция с for_each, см. выше) конструкция уже не работает (см. ниже). Конечно можно писать конкретные значения в `[]`, но это не подход девопс инженера. Была мысль использовать конструкцию tonumber(each.key), но подходящего аргумента нет (например resource id).
+Вопрос пока открыт.
 
 ```
 vagrant@server1:~/devops-netology/terraform$ terraform plan
