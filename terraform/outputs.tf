@@ -17,10 +17,10 @@ output "instance1_ip_public_addr" {
   description = "Public IP"
 }
 
-output "instance2_ip_public_addr" {
-  value       = aws_instance.netolo_node2[0].public_ip
-  description = "Public IP"
-}
+#output "instance2_ip_public_addr" {
+#  value       = aws_instance.netolo_node2[0].public_ip
+#  description = "Public IP"
+#}
 
 output "account_id" {
   value = data.aws_caller_identity.current.account_id

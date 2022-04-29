@@ -56,11 +56,12 @@ resource "aws_instance" "netolo" {
 }
 
 
-resource "aws_instance" "netolo_node2" {
-  for_each = local.instance_common_maps[terraform.workspace]
-  ami = data.aws_ami.ubuntu_latest.id
-  instance_type = each.value
-}
+#resource "aws_instance" "netolo_node2" {
+#  for_each = local.instance_common_maps[terraform.workspace]
+#  ami = data.aws_ami.ubuntu_latest.id
+#  instance_type = each.value
+#  name = each.key
+#}
 
 
 
