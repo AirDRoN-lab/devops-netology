@@ -4,8 +4,8 @@ delete_source_branch_on_merge: true
 parallel_plan: true
 parallel_apply: true
 projects:
-- name: my-project-terraform
-  dir: .
+- name: terraform
+  dir: terraform
   workspace: stage
   terraform_version: v1.1.9
   delete_source_branch_on_merge: true
@@ -21,7 +21,7 @@ workflows:
 #      - run: my-custom-command arg1 arg2
       - init
       - plan:
-#          extra_args: ["-lock", "false"]
+          extra_args: ["-lock", "false"]
 #      - run: my-custom-command arg1 arg2
     apply:
       steps:
