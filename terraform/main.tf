@@ -6,14 +6,14 @@ provider "aws" {
   region = "us-east-1"
 }
 
-terraform {
-  backend "s3" {
-    bucket = "netos3"
-    key    = "network/terraform.tfstate"
-    region = "us-east-1"
+#terraform {
+#  backend "s3" {
+#    bucket = "netos3"
+#    key    = "network/terraform.tfstate"
+#    region = "us-east-1"
 #    dynamodb_table = "terraform-lock"
-  }
-}
+#  }
+#}
 
 data "aws_ami" "ubuntu_latest" {
   most_recent = true
