@@ -4,8 +4,7 @@ delete_source_branch_on_merge: true
 parallel_plan: true
 parallel_apply: true
 projects:
-- name: terraform
-  dir: terraform
+- dir: terraform
   workspace: stage
   terraform_version: v1.1.9
   delete_source_branch_on_merge: true
@@ -27,6 +26,6 @@ workflows:
       steps:
       - run: echo hi
       - apply
-#allowed_regexp_prefixes:
-#- dev/
-#- staging/
+allowed_regexp_prefixes:
+- prod/
+- stage/
