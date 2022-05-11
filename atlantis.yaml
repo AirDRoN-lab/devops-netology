@@ -20,7 +20,7 @@ workflows:
 #      - run: my-custom-command arg1 arg2
       - init
       - plan:
-          extra_args: ["-lock", "false"]
+#          extra_args: ["-lock", "false"]
 #      - run: my-custom-command arg1 arg2
     apply:
       steps:
