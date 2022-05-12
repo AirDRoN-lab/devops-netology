@@ -72,7 +72,7 @@ atlantis server --atlantis-url="$URL" --gh-user="$USERNAME" --gh-token="$TOKEN" 
 на стороне репозитория [atlantis.yaml](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/atlantis.yaml)
 
 Скриншоты успешного выполнения plan и apply из диалога PR:
-[cкрин_1](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/Screen_Atlantis_1.JPG)
+[cкрин_1](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/Screen_Atlantis_1.JPG), 
 [cкрин_2](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/Screen_Atlantis_2.JPG)
 
 ## Задача 3. Знакомство с каталогом модулей. 
