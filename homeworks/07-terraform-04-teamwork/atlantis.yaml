@@ -11,7 +11,16 @@ projects:
   autoplan:
     when_modified: ["*.tf"]
     enabled: true
-  apply_requirements: [mergeable, approved]
+  apply_requirements: [mergeable]
+  workflow: myworkflow
+- dir: terraform
+  workspace: prod
+  terraform_version: v1.1.9
+  delete_source_branch_on_merge: true
+  autoplan:
+    when_modified: ["*.tf"]
+    enabled: true
+  apply_requirements: [mergeable]
   workflow: myworkflow
 workflows:
   myworkflow:
@@ -20,7 +29,7 @@ workflows:
 #      - run: my-custom-command arg1 arg2
       - init
       - plan:
-          extra_args: ["-lock", "false"]
+#          extra_args: ["-lock", "false"]
 #      - run: my-custom-command arg1 arg2
     apply:
       steps:
