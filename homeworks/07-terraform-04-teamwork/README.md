@@ -15,7 +15,7 @@
 В качестве результата задания приложите снимок экрана с успешным применением конфигурации.
 
 ### Ответ
-Снимок успешного применения apply и plan по [ссылке](https://www.runatlantis.io/docs/server-side-repo-config.html).
+Снимок успешного применения apply и plan по [ссылке](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/Screen_TerraCloud_Success.JPG).
 
 ## Задача 2. Написать серверный конфиг для атлантиса. 
 
@@ -36,6 +36,44 @@
 В качестве результата приложите ссылку на файлы `server.yaml` и `atlantis.yaml`.
 ### Ответ
 
+Установка атлантис и ngrok по [доке](https://www.runatlantis.io/guide/testing-locally.html#download-atlantis):
+```
+vagrant@server1:~$ curl https://github.com/runatlantis/atlantis/releases/download/v0.19.2/atlantis_linux_amd64.zip -o "atlantis_linux.zip"
+vagrant@server1:~$ unzip atlantis_linux.zip -d /usr/local/bin
+
+vagrant@server1:~$ atlantis version
+atlantis 0.19.2
+
+vagrant@server1:~$ curl https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+vagrant@server1:~$ sudo tar xvzf ngrok-v3-stable-linux-amd64.tgz -C /usr/local/bin
+
+vagrant@server1:~$ ngrok version
+ngrok version 3.0.3
+```
+
+Запуск ngrok ```vagrant@server1:~$ ngrok http 4141``` и его [вывод](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/Screen_Atlantis_3_ngrok.JPG)
+
+Экспортируем переменные:
+```
+export URL="https://https://4923-77-91-103-153.eu.ngrok.io"
+export USERNAME="AirDRoN-lab"
+export REPO_ALLOWLIST="github.com/AirDRoN-lab/devops-netology"
+export SECRET="32684905744417222656"
+export TOKEN="ghp_X4AbhIEgcsp0cWXjk5f0MfwvEJsFRu4TKCj2"
+```
+
+Выполняем настройку WebHook в GitHub согласно [документации](https://www.runatlantis.io/guide/testing-locally.html#download-atlantis) и запускаем atlantis
+```
+atlantis server --atlantis-url="$URL" --gh-user="$USERNAME" --gh-token="$TOKEN" --gh-webhook-secret="$SECRET" --repo-allowlist="$REPO_ALLOWLIST" --repo-config=atlantis_server_cfg.yaml
+```
+
+Файлы конфигурации использовались следющие (правки согласно ТЗ):
+на стороне сервера [atlantis_server_cfg.yaml](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/atlantis_server_cfg.yaml)
+на стороне репозитория [atlantis.yaml](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/atlantis.yaml)
+
+Скриншоты успешного выполнения plan и apply из диалога PR:
+[cкрин_1](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/Screen_Atlantis_1.JPG)
+[cкрин_2](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/Screen_Atlantis_2.JPG)
 
 ## Задача 3. Знакомство с каталогом модулей. 
 
