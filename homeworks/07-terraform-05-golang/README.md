@@ -46,7 +46,19 @@
 ### Ответ
 
 Задача1:
-```
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Print("Enter number of meters to convert to feet: ")
+	var input float64 = 10
+	fmt.Scanf("%f", &input)
+	output := input / 0.3048
+
+	fmt.Println(output)
+}
 ```
 Задача2:
 ```
