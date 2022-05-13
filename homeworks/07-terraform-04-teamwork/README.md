@@ -86,3 +86,24 @@ atlantis server --atlantis-url="$URL" --gh-user="$USERNAME" --gh-token="$TOKEN" 
 
 В качестве результата задания приложите ссылку на созданный блок конфигураций. 
 ### Ответ
+
+Для примера используем два модуля: `terraform-aws-modules/ec2-instance/aws` и `terraform-aws-modules/vpc/aws`.
+Данные модули добавлены в конфигурационный файл [main.tf](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/main.tf). Также создан [outputs.tf](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/07-terraform-04-teamwork/outputs.tf) с выводом из модуля ec2 (согласно ТЗ).
+
+Вывод terraform plan:
+```
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+ec2_instance_public_ips = "54.226.245.103"
+instance_id = "i-00bf57cf9eebba7c6"
+private_ip = "172.31.29.234"
+
+```
+
+Буду ли в своем проекте использовать этот модуль или непосредственно  ресурс `aws_instance` без помощи модуля? 
+
+В случае, когда надо сделать что-то быстро и разово, модуль можно не использовать,  т.е. исользовать официальный провайдер aws_instance, но если нужна конструкция более сложная с созданием нескольких серверов и/или возможным повторением создания для разных workspace - то модуль стоит того, чтобы его использовать. Использование модулей кажется наиболее удобным, особенно это касается outputs.
+
+
