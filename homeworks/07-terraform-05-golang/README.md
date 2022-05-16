@@ -59,8 +59,15 @@ func main() {
 	fmt.Println("Thr result is: ", output)
 }
 ```
+Результат:
+```
+C:\Users\DGolodnikov\Documents\_Голодников\_Projects\Gotest>go run main.go
+Enter number of meters to convert to feet: 50
+164.04199475065616
+```
 Задача2:
 ```
+
 ```
 Задача3:
 ```
