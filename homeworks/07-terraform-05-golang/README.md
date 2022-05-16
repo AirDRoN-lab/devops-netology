@@ -65,10 +65,52 @@ C:\Users\DGolodnikov\Documents\_Голодников\_Projects\Gotest>go run mai
 Enter number of meters to convert to feet: 50
 164.04199475065616
 ```
-Задача2:
+Задача2 (вариант 1):
+```go
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+func main() {
+	x := []int{48, 96, 86, 68, 57, 82, 63, 70, 37, 34, 83, 27, 19, 97, 9, 17}
+	sort.Ints(x)
+	fmt.Println("The result is: ", x[0])
+}
+```
+Результат:
+```
+C:\Users\DGolodnikov\Documents\_Голодников\_Projects\Gotest>go run main.go
+The result is:  9
+```
+Задача2 (вариант 2):
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	x := []int{48, 96, 86, 68, 57, 82, 63, 70, 37, 34, 83, 27, 19, 97, 9, 17}
+	var length = len(x)
+	min := x[0]
+	for k := 0; k < length-1; k++ {
+		if min > x[k+1] {
+			min = x[k+1]
+		}
+	}
+	fmt.Println("The min value is: ", min)
+}
+```
+Результат:
+```
+C:\Users\DGolodnikov\Documents\_Голодников\_Projects\Gotest>go run main.go
+The min value is: 9
 ```
 
-```
 Задача3:
 ```
 ```
