@@ -23,9 +23,62 @@
 Resource перечислены в файле ./internal/provider/provider.go строка [896](https://github.com/hashicorp/terraform-provider-aws/blob/c3b5c746b140a795a8d47943689dfc3856db5a0a/internal/provider/provider.go#L896), 
 а DataSource в строке [420](https://github.com/hashicorp/terraform-provider-aws/blob/c3b5c746b140a795a8d47943689dfc3856db5a0a/internal/provider/provider.go#L420).
 
-Конфликтует ресурсом name_prefix, в коде это можно найти в строке [87](https://github.com/hashicorp/terraform-provider-aws/blob/b7e860d4ea8003793b4f4c049301d8d7de86eeda/internal/service/sqs/queue.go#L87) файла terraform-provider-aws/internal/service/sqs/queue.go.
+Конфликтует c параметром name_prefix, в коде это можно найти в строке [87](https://github.com/hashicorp/terraform-provider-aws/blob/b7e860d4ea8003793b4f4c049301d8d7de86eeda/internal/service/sqs/queue.go#L87) файла terraform-provider-aws/internal/service/sqs/queue.go.
 
-  
+Что касается валидации и регулярного выражения, то в описании параметра name (как собвственно и name_prefix) валидации нет, т.е. нет функции ValidateFunc:   
+
+```go
+// DELETED
+"name": {
+			Type:          schema.TypeString,
+			Optional:      true,
+			Computed:      true,
+			ForceNew:      true,
+			ConflictsWith: []string{"name_prefix"},
+		},
+"name_prefix": {
+			Type:          schema.TypeString,
+			Optional:      true,
+			Computed:      true,
+			ForceNew:      true,
+			ConflictsWith: []string{"name"},
+// DELETED
+```
+Пример, где валидация например есть:
+```go
+// DELETED
+"policy": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Computed:         true,
+			ValidateFunc:     validation.StringIsJSON,
+			DiffSuppressFunc: verify.SuppressEquivalentPolicyDiffs,
+			StateFunc: func(v interface{}) string {
+				json, _ := structure.NormalizeJsonString(v)
+				return json
+			},
+		},
+// DELETED
+```
+Валидация Strings описана в файле https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/strings.go, например:
+
+```go
+func StringIsValidRegExp(i interface{}, k string) (warnings []string, errors []error) {
+	v, ok := i.(string)
+	if !ok {
+		errors = append(errors, fmt.Errorf("expected type of %s to be string", k))
+		return warnings, errors
+	}
+
+	if _, err := regexp.Compile(v); err != nil {
+		errors = append(errors, fmt.Errorf("%q: %s", k, err))
+	}
+
+	return warnings, errors
+}
+```
+
+
 ## Задача 2. (Не обязательно) 
 В рамках вебинара и презентации мы разобрали как создать свой собственный провайдер на примере кофемашины. 
 Также вот официальная документация о создании провайдера: 
