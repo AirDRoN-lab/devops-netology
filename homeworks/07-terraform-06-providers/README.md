@@ -60,7 +60,7 @@ Resource перечислены в файле ./internal/provider/provider.go с
 		},
 // DELETED
 ```
-Валидация Strings описана в файле https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/strings.go, который импортируется в основном файле выше. Пример функции валидации строки указанному RexExp:
+Валидация Strings описана в файле https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/strings.go, который импортируется в основном файле выше. [Пример](https://github.com/hashicorp/terraform-plugin-sdk/blob/19b8cceba7264b9551c2c2a3acf633685e4eec8d/helper/validation/strings.go#L90) функции валидации строки указанному RexExp:
 
 ```go
 // StringMatch returns a SchemaValidateFunc which tests if the provided value
