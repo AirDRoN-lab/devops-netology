@@ -23,6 +23,8 @@
 Resource перечислены в файле ./internal/provider/provider.go строка [896](https://github.com/hashicorp/terraform-provider-aws/blob/c3b5c746b140a795a8d47943689dfc3856db5a0a/internal/provider/provider.go#L896), 
 а DataSource в строке [420](https://github.com/hashicorp/terraform-provider-aws/blob/c3b5c746b140a795a8d47943689dfc3856db5a0a/internal/provider/provider.go#L420).
 
+Конфликтует ресурсом name_prefix, в коде это на строке 87 [87](https://github.com/hashicorp/terraform-provider-aws/blob/b7e860d4ea8003793b4f4c049301d8d7de86eeda/internal/service/sqs/queue.go#L87) в файле terraform-provider-aws/internal/service/sqs/queue.go.
+
   
 ## Задача 2. (Не обязательно) 
 В рамках вебинара и презентации мы разобрали как создать свой собственный провайдер на примере кофемашины. 
