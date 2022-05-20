@@ -97,4 +97,4 @@ func StringMatch(r *regexp.Regexp, message string) schema.SchemaValidateFunc {
 
 ### Ответ:
 
-Будет выполнена позже...
+Будет выполнена позже... без необходимости проверки
