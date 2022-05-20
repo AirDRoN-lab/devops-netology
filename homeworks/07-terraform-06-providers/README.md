@@ -63,18 +63,25 @@ Resource перечислены в файле ./internal/provider/provider.go с
 Валидация Strings описана в файле https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/validation/strings.go, например:
 
 ```go
-func StringIsValidRegExp(i interface{}, k string) (warnings []string, errors []error) {
-	v, ok := i.(string)
-	if !ok {
-		errors = append(errors, fmt.Errorf("expected type of %s to be string", k))
-		return warnings, errors
-	}
+// StringMatch returns a SchemaValidateFunc which tests if the provided value
+// matches a given regexp. Optionally an error message can be provided to
+// return something friendlier than "must match some globby regexp".
+func StringMatch(r *regexp.Regexp, message string) schema.SchemaValidateFunc {
+	return func(i interface{}, k string) ([]string, []error) {
+		v, ok := i.(string)
+		if !ok {
+			return nil, []error{fmt.Errorf("expected type of %s to be string", k)}
+		}
 
-	if _, err := regexp.Compile(v); err != nil {
-		errors = append(errors, fmt.Errorf("%q: %s", k, err))
-	}
+		if ok := r.MatchString(v); !ok {
+			if message != "" {
+				return nil, []error{fmt.Errorf("invalid value for %s (%s)", k, message)}
 
-	return warnings, errors
+			}
+			return nil, []error{fmt.Errorf("expected value of %s to match regular expression %q, got %v", k, r, i)}
+		}
+		return nil, nil
+	}
 }
 ```
 
@@ -88,4 +95,6 @@ func StringIsValidRegExp(i interface{}, k string) (warnings []string, errors []e
 2. В виде результата приложение ссылку на исходный код.
 3. Попробуйте скомпилировать провайдер, если получится то приложите снимок экрана с командой и результатом компиляции.   
 
+### Ответ:
 
+Будет выполнена позже...
