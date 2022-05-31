@@ -2,19 +2,19 @@
 
 1. Где расположен файл с `some_fact` из второго пункта задания?
 
-В директории групповых переменных т.е. group_vars/{el,deb,all}/examp.yml
+В директории групповых переменных т.е. `group_vars/{el,deb,all}/examp.yml`
 
 2. Какая команда нужна для запуска вашего `playbook` на окружении `test.yml`?
 
-Необходимо использовать ключ -i, т.е. ansible-playbook -i inventory/test.yml
+Необходимо использовать ключ -i, т.е. `ansible-playbook -i inventory/test.yml`
 
 3. Какой командой можно зашифровать файл?
 
-ansible-vault encrypt
+`ansible-vault encrypt`
 
 4. Какой командой можно расшифровать файл?
 
-ansible-vault decrypt
+`ansible-vault decrypt`
 
 5. Можно ли посмотреть содержимое зашифрованного файла без команды расшифровки файла? Если можно, то как?
 
@@ -23,20 +23,21 @@ ansible-vault decrypt
 6. Как выглядит команда запуска `playbook`, если переменные зашифрованы?
 
 Пароль можно передать ччерез файл, либо интерактивный ввод:
+```
 ansible-playbook --vault-password-file={имя файла}
 ansible-playbook --ask-vault-password
-
+```
 7. Как называется модуль подключения к host на windows?
 
-В документации нашел winrm (Run tasks over Microsoft's WinRM), но помойму был какой-то еще вариант =)
+В документации нашел winrm (Run tasks over Microsoft's WinRM), но помойму был какой-то еще вариант. =)
 
 8. Приведите полный текст команды для поиска информации в документации ansible для модуля подключений ssh
 
-ansible-doc -t connection ssh
+`ansible-doc -t connection ssh`
 
 9. Какой параметр из модуля подключения `ssh` необходим для того, чтобы определить пользователя, под которым необходимо совершать подключение?
 
-параметр remote_user
+параметр `remote_user`
 
 ## Доп. ответы:
 Скрипт автоматизации:
