@@ -25,6 +25,7 @@ resource "yandex_compute_instance" "vm-1" {
   boot_disk {
     initialize_params {
       image_id = "fd8firhksp7daa6msfes" #UBUNTU 2004 from YA_base
+      size = 5
     }
   }
 
