@@ -63,8 +63,11 @@ Playbook переработан на работу с ролями. Тем не �
 11. В ответ приведите ссылки на оба репозитория с roles и одну ссылку на репозиторий с playbook.
 
 [Репозиторий c playbook](https://github.com/AirDRoN-lab/ansible2-netology/playbook)
+
 [ansible-vector-role](https://github.com/AirDRoN-lab/ansible-vector-role) 
+
 [ansible-lighthouse-role](https://github.com/AirDRoN-lab/ansible-lighthouse-role)
+
 [Скриншот рабочего Lighthouse](Screen_Lighthouse_v2.JPG)
 
 
