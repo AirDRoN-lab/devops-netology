@@ -1,0 +1,7 @@
+---
+# handlers file for roles/lighthouse
+- name: reload-nginx
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    state: reloaded

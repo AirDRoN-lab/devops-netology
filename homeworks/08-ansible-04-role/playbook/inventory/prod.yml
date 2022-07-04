@@ -1,0 +1,12 @@
+---
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_host: '{{ vmip1 }}'
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    vector-01:
+      ansible_host: '{{ vmip2 }}'
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    lighthouse-01:
+      ansible_host: '{{ vmip3 }}'
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

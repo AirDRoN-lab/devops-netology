@@ -1,0 +1,66 @@
+---
+# tasks file for roles/vector
+- name: Get Vector distrib by get_url
+  ansible.builtin.get_url:
+    url: 'https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-x86_64-unknown-linux-gnu.tar.gz'
+    dest: '{{ ansible_facts["env"]["HOME"] }}/vector_{{ vector_version }}_tar.gz'
+- name: Mkdir for Vector by file
+  ansible.builtin.file:
+    path: "vector"
+    state: directory
+    mode: '0755'
+- name: UnZIP Vector
+  ansible.builtin.unarchive:
+    src: '{{ ansible_facts["env"]["HOME"] }}/vector_{{ vector_version }}_tar.gz'
+    dest: '{{ ansible_facts["env"]["HOME"] }}/vector'
+    remote_src: yes
+    extra_opts: [--strip-components=2]
+- name: Add EnvPATH to profile
+  ansible.builtin.lineinfile:
+    dest: '{{ ansible_facts["env"]["HOME"] }}/.profile'
+    regexp: ^export
+    line: 'export PATH="$HOME/vector/bin:$PATH"'
+- name: Commit EnvPATH
+  ansible.builtin.shell:
+    cmd: 'source $HOME/.profile && echo $PATH'
+    executable: /bin/bash
+  register: path
+- name: CHECK EnvPATH and other VAR (for check only)
+  ansible.builtin.debug:
+    msg: 'PATH variables {{ path.stdout }}, HOME directory {{ ansible_facts["env"]["HOME"] }}, VM IP {{ vmip2 }}'
+- name: ADD group vector for Vector
+  become: true
+  ansible.builtin.group:
+    name: vector
+    state: present
+- name: ADD user vector for Vector
+  become: true
+  ansible.builtin.user:
+    name: vector
+    groups: vector
+    shell: /bin/bash
+- name: Change vector.service file for systemd
+  ansible.builtin.lineinfile:
+    dest: '{{ ansible_facts["env"]["HOME"] }}/vector/etc/systemd/vector.service'
+    regexp: ^ExecStart=
+    line: 'ExecStart={{ ansible_facts["env"]["HOME"] }}/vector/bin/vector --config {{ ansible_facts["env"]["HOME"] }}/vector/config/vector.toml'
+- name: Change vector.service file for systemd. Disable PreStart
+  ansible.builtin.lineinfile:
+    dest: '{{ ansible_facts["env"]["HOME"] }}/vector/etc/systemd/vector.service'
+    regexp: ^ExecStartPre=
+    line: '#'
+- name: Copy vector.service to system dir
+  become: true
+  ansible.builtin.copy:
+    src: '{{ ansible_facts["env"]["HOME"] }}/vector/etc/systemd/vector.service'
+    dest: /etc/systemd/system/vector.service
+    mode: 0644
+    owner: root
+    group: root
+    remote_src: yes
+- name: Starting vector by systemd
+  become: true
+  ansible.builtin.systemd:
+    name: vector
+    state: restarted
+    enabled: yes

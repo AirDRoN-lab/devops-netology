@@ -1,0 +1,3 @@
+---
+# defaults file for roles/vector
+vector_version: "0.22.0"

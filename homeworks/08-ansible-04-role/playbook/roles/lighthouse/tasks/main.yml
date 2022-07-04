@@ -1,0 +1,14 @@
+---
+# tasks file for roles/lighthouse
+- name: Git clone LIGHTHOUSE
+  become: true
+  ansible.builtin.git:
+    repo: '{{ lighthouse_repo }}'
+    dest: '{{ lighthouse_dir }}'
+- name: Reconfigure NGINX
+  become: true
+  ansible.builtin.lineinfile:
+    dest: '/etc/nginx/sites-available/default'
+    regexp: 'root /var/www/html;'
+    line: 'root {{ lighthouse_dir }};'
+  notify: reload-nginx

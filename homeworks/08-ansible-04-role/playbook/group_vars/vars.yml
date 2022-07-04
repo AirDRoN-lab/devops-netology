@@ -1,0 +1,9 @@
+---
+clickhouse_listen_host:
+  - "::"
+clickhouse_version: "22.3.3.44"
+clickhouse_networks_default:
+  - "127.0.0.1"
+  - "94.180.116.137"
+lighthouse_dir: "/var/www/lighthouse"
+vector_version: "0.22.0"

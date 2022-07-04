@@ -1,0 +1,55 @@
+---
+- name: Install NGINX
+  hosts: lighthouse-01
+  tags: nginx
+  tasks:
+    - name: NGINX INSTALL by apt
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+        package: "{{ item }}"
+      with_items:
+        - nginx
+- name: Install LIGHTHOUSE
+  hosts: lighthouse-01
+  tags: lighthouse
+  pre_tasks:
+    - name: Install GIT
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+        package: "{{ item }}"
+      with_items:
+        - git
+  roles:
+    - lighthouse
+- name: Install CLICKHOUSE
+  hosts: clickhouse-01
+  tags: clickhouse
+  handlers:
+    - name: Start clickhouse service
+      become: true
+      ansible.builtin.service:
+        name: clickhouse-server
+        state: restarted
+  roles:
+    - clickhouse
+  post_tasks:
+    - name: Create database
+      ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+      register: create_db
+      failed_when: create_db.rc != 0 and create_db.rc !=82
+      changed_when: create_db.rc == 0
+- name: Install VECTOR
+  hosts: vector-01
+  tags: vector
+  pre_tasks:
+  - name: Install UnZIP by apt
+    become: true
+    ansible.builtin.apt:
+      package: "{{ item }}"
+    with_items:
+      - unzip
+  roles:
+    - vector
+    

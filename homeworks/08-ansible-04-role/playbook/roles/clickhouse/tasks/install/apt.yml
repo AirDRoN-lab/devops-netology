@@ -1,0 +1,53 @@
+---
+#Main installation actions
+#https://clickhouse.com/docs/en/getting-started/#installation
+
+- name: Install by APT | Apt-key add repo key
+  apt_key:
+    keyserver: "{{ clickhouse_repo_keyserver }}"
+    id: "{{ clickhouse_repo_key }}"
+  become: true
+  tags: [install]
+
+- name: Install by APT | Remove old repo
+  apt_repository:
+    repo: "{{ clickhouse_repo_old }}"
+    state: absent
+  become: true
+  when: clickhouse_repo_old is defined
+  tags: [install]
+
+- name: Install by APT | Repo installation
+  apt_repository:
+    repo: "{{ clickhouse_repo }}"
+    state: present
+  become: true
+  tags: [install]
+
+- name: Install by APT | Package installation
+  apt:
+    name: "{{ clickhouse_package | map('regex_replace', '$', '=' + clickhouse_version) | list }}"
+    state: present
+    update_cache: true
+  become: true
+  when: clickhouse_version != 'latest'
+  tags: [install]
+
+- name: Install by APT | Package installation
+  apt:
+    name: "{{ clickhouse_package }}"
+    state: "{{ clickhouse_version }}"
+    update_cache: true
+  become: true
+  when: clickhouse_version == 'latest'
+  tags: [install]
+
+- name: Hold specified version during APT upgrade | Package installation
+  become: true
+  copy:
+    dest: "/etc/apt/preferences.d/fixed-{{ item }}"
+    content: |
+      Package: {{ item }}
+      Pin: release a=now
+      Pin-Priority: 1001
+  loop: "{{ clickhouse_package }}"
