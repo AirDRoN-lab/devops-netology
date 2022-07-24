@@ -64,6 +64,7 @@ INFO     Initialized scenario in /home/vagrant/ansible2-netology/playbook/roles/
 5. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
 
 Добавлен тэг 1.1.0, ветка main, репозиторий https://github.com/AirDRoN-lab/ansible-vector-role/tree/main
+STDOUT выполнения здесь https://github.com/AirDRoN-lab/ansible-vector-role/blob/main/Molecule_stdout.txt
 
 ### Tox
 
@@ -123,7 +124,7 @@ setenv =
 
 Все, ок. 
 
-Полный вывод в данной файле.
+Полный вывод в данной файле https://github.com/AirDRoN-lab/ansible-vector-role/blob/Task1_Tox_testing_wPodman/Tox_stdout.txt
 Краткий ниже:
 
 ```
