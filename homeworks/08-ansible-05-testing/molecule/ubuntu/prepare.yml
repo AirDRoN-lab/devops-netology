@@ -1,0 +1,10 @@
+---
+
+- name: Prepare PLAY
+  hosts: all
+  tasks:
+    - name: Install CURL in prepare
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+        package: "curl"
