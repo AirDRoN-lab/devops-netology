@@ -113,7 +113,7 @@ setenv =
 
 5. Создайте облегчённый сценарий для `molecule` с драйвером `molecule_podman`. Проверьте его на исполнимость.
 
-Создан, выложен здесь.
+Создан, выложен здесь: https://github.com/AirDRoN-lab/ansible-vector-role/tree/Task1_Tox_testing_wPodman
 
 6. Пропишите правильную команду в `tox.ini` для того чтобы запускался облегчённый сценарий.
 
@@ -137,7 +137,7 @@ ________________________________________________________________ summary _______
 
 9. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
 
-Добавлен тэг 1.1.0, ветка Task1_Tox_testing_wPodman, https://github.com/AirDRoN-lab/ansible-vector-role/tree/Task1_Tox_testing_wPodman 
+Тег не добавлен, т.к. конфигурация заточена под podman и tox. Но создана отдельная ветка Task1_Tox_testing_wPodman, https://github.com/AirDRoN-lab/ansible-vector-role/tree/Task1_Tox_testing_wPodman 
 
 После выполнения у вас должно получится два сценария molecule и один tox.ini файл в репозитории. Ссылка на репозиторий являются ответами на домашнее задание. Не забудьте указать в ответе теги решений Tox и Molecule заданий.
 
