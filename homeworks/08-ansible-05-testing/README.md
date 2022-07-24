@@ -113,7 +113,7 @@ setenv =
 
 5. Создайте облегчённый сценарий для `molecule` с драйвером `molecule_podman`. Проверьте его на исполнимость.
 
-Создан, выложен здесь: https://github.com/AirDRoN-lab/ansible-vector-role/tree/Task1_Tox_testing_wPodman
+Создан, выложен здесь: https://github.com/AirDRoN-lab/ansible-vector-role/blob/Task1_Tox_testing_wPodman/molecule/compatibility/molecule.yml
 
 6. Пропишите правильную команду в `tox.ini` для того чтобы запускался облегчённый сценарий.
 
