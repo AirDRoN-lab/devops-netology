@@ -1,0 +1,8 @@
+- name: TEST the module
+  hosts: localhost
+  collections:
+    - airdron.operwfile
+  roles:
+    - operwfile
+
+
