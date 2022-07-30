@@ -1,5 +1,7 @@
 - name: TEST the module
   hosts: localhost
+  vars:
+    path: '/home/vagrant/testfile_for_module.txt'
   collections:
     - airdron.operwfile
   roles:

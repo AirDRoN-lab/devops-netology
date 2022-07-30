@@ -2,5 +2,5 @@
 # tasks file for operwfile
 - name: Create a FILE
   airdron.operwfile.wfile:
-    path: '/home/vagrant/test.txt'
-    content: 'HALLLLLLLLLLLLO'
+    path: '{{ path }}'
+    content: '{{ content }}'
