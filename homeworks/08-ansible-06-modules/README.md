@@ -36,7 +36,212 @@
 
 ### Ответы
 
-Создан файл модуля 
+Создан файл модуля  https://github.com/AirDRoN-lab/airdron.operwfile/blob/main/plugins/modules/wfile.py
+
+Тестирование модуля выполнялось:
+
+1) Через hacking/test-module:
+```
+(venv) vagrant@server2:~/REPO/ansible$ hacking/test-module -m library/mod_test.py -a 'path=/home/vagrant/punpun.txt content=HALLO'
+* including generated source, if any, saving to: /home/vagrant/.ansible_module_generated
+* ansiballz module detected; extracted module source to: /home/vagrant/debug_dir
+***********************************
+RAW OUTPUT
+
+{"changed": true, "original_message": "/home/vagrant/punpun.txt", "message": "Fucking started?", "invocation": {"module_args": {"path": "/home/vagrant/punpun.txt", "content": "HALLO"}}}
+
+
+***********************************
+PARSED OUTPUT
+{
+    "changed": true,
+    "invocation": {
+        "module_args": {
+            "content": "HALLO",
+            "path": "/home/vagrant/punpun.txt"
+        }
+    },
+    "message": "Fucking started?",
+    "original_message": "/home/vagrant/punpun.txt"
+}
+```
+2) Через ansible playbook:
+```
+(venv) vagrant@server2:~/REPO/ansible$ ansible-playbook ./testmod.yml
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [TEST the module] ***********************************************************************************************************************
+
+TASK [Gathering Facts] ***********************************************************************************************************************
+ok: [localhost]
+
+TASK [RUN the module] ************************************************************************************************************************
+changed: [localhost]
+
+TASK [PRINT test output] *********************************************************************************************************************
+ok: [localhost] => {
+    "msg": {
+        "changed": true,
+        "failed": false,
+        "message": "NETU FILE, nu pishem ept",
+        "original_message": "/home/vagrant/punpun4.txt"
+    }
+}
+
+PLAY RECAP ***********************************************************************************************************************************
+localhost                  : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+(venv) vagrant@server2:~/REPO/ansible$ ansible-playbook ./testmod.yml
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [TEST the module] ***********************************************************************************************************************
+
+TASK [Gathering Facts] ***********************************************************************************************************************
+ok: [localhost]
+
+TASK [RUN the module] ************************************************************************************************************************
+ok: [localhost]
+
+TASK [PRINT test output] *********************************************************************************************************************
+ok: [localhost] => {
+    "msg": {
+        "changed": false,
+        "failed": false,
+        "message": "EST FILE",
+        "original_message": "/home/vagrant/punpun4.txt"
+    }
+}
+
+PLAY RECAP ***********************************************************************************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+(venv) vagrant@server2:~/REPO/ansible$ cat /home/vagrant/punpun4.txt
+HALLOU my FRIEND4
+```
+
+Создаем коллекцию и роль в отдельной директории:
+```
+vagrant@server2:~/REPO$ ansible-galaxy collection init airdron.operwfile
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+- Collection airdron.operwfile was created successfully
+
+vagrant@server2:~/REPO/airdron/operwfile/roles$ ansible-galaxy role init operwfile
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+- Role operwfile was created successfully
+```
+
+Формируем минимальную документацию на коллецию, роль и модуль, включаю документацию внутри кода модуля. Переносим модуль в новую директорию, создаем роль, переносим переменные в defaults, а также создаем тестовый playbook:
+
+```
+- name: TEST the module
+  hosts: localhost
+  vars:
+    path: '/home/vagrant/testfile_for_module.txt'
+  collections:
+    - airdron.operwfile
+  roles:
+    - operwfile
+```
+
+Создаем архивный файл коллекции через ansible-galaxy:
+```
+vagrant@server2:~/REPO/airdron/operwfile$ ansible-galaxy collection build
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+Created collection for airdron.operwfile at /home/vagrant/REPO/airdron/operwfile/airdron-operwfile-1.0.1.tar.gz
+```
+
+В итоге структура репозитория: https://github.com/AirDRoN-lab/airdron.operwfile
+
+Для тестирования переносим архивный файл коллекции в другую директорию, распаковываем:
+
+```
+vagrant@server2:~/TEST$ ansible-galaxy install airdron-operwfile-1.0.0.tar.gz
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+Starting galaxy role install process
+- airdron-operwfile-1.0.0.tar.gz is already installed, skipping.
+```
+
+Запускаем Playbook и запускаем повторно для тестирования идемпотентности:
+
+```
+vagrant@server2:~/TEST$ ansible-playbook site.yml
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [TEST the module] ***********************************************************************************************************************
+
+TASK [Gathering Facts] ***********************************************************************************************************************
+ok: [localhost]
+
+TASK [operwfile : Create a FILE] *************************************************************************************************************
+changed: [localhost]
+
+PLAY RECAP ***********************************************************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+vagrant@server2:~/TEST$ cat ~/test.txt
+HALLLLLLLLLLLLO
+vagrant@server2:~/TEST$ ansible-playbook site.yml
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [TEST the module] ***********************************************************************************************************************
+
+TASK [Gathering Facts] ***********************************************************************************************************************
+ok: [localhost]
+
+TASK [operwfile : Create a FILE] *************************************************************************************************************
+ok: [localhost]
+
+PLAY RECAP ***********************************************************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+```
+
+Список коллеций и ролей:
+
+```
+vagrant@server2:~/TEST$ ansible-galaxy collection list
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+
+# /home/vagrant/.ansible/collections/ansible_collections
+Collection        Version
+----------------- -------
+airdron.operwfile 1.0.0
+
+# /usr/lib/python3/dist-packages/ansible_collections
+Collection                Version
+------------------------- -------
+amazon.aws                1.4.0
+ansible.netcommon         1.5.0
+...
+vyos.vyos                 1.1.1
+wti.remote                1.0.1
+
+vagrant@server2:~/TEST$ ansible-galaxy role list
+[WARNING]: You are running the development version of Ansible. You should only run Ansible from "devel" if you are modifying the Ansible
+engine, or trying out features under development. This is a rapidly changing source of code and can become unstable at any point.
+# /home/vagrant/.ansible/roles
+- airdron-operwfile-1.0.0.tar.gz, (unknown version)
+```
+
+Коллеция выложена в репозиторий с тегом 1.0.1: https://github.com/AirDRoN-lab/airdron.operwfile
+В том числе продублирована в данном репозитории ДЗ.
 
 ## Необязательная часть
 
