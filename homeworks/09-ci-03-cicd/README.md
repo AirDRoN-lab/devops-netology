@@ -13,7 +13,7 @@
 
 ### Ответ
 
-Выполнено с помощью скрипта start.sh:
+Выполнено с помощью скрипта start.sh (полный stdout в [файле](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-03-cicd/play_stdout.txt)):
 
 ```bash
 vagrant@server2:~/REPO/mnt-homeworks/09-ci-03-cicd$ ./start.sh apply
@@ -59,18 +59,15 @@ sonar-01                   : ok=35   changed=27   unreachable=0    failed=0    s
 
 ### Ответ
 
-Для исключения ошибок warning был дописан файл [sonar-project.properties]():
+Для исключения ошибок warning был дописан файл [sonar-project.properties](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-03-cicd/example/sonar-project.properties):
+
 ```
 sonar.python.version=2.7, 3.7, 3.8
 sonar.scm.disabled=true
 ```
-
-<kbd>
-[Sonar_1_success_01]()
-<\kbd>
-<kbd>
-[Sonar_1_success_02]()
-<\kbd>
+Скриншоты SonarQ:
+<kbd>![Sonar_1_success_01](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-03-cicd/Sonar_1_success_01.GIF)</kbd>
+<kbd>![Sonar_1_success_02](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-03-cicd/Sonar_1_success_02.GIF)</kbd>
 
 ## Знакомство с Nexus
 
@@ -86,7 +83,10 @@ sonar.scm.disabled=true
 
 ### Ответ
 
-[maven-metadata.xml]()
+Скриншот Nexus:
+<kbd>![Nexus_repo_files_01](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-03-cicd/Nexus_repo_files_01.GIF)</kbd>
+
+Файл [maven-metadata.xml](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-03-cicd/maven-metadata.xml)
 
 ## Знакомство с Maven
 
@@ -103,4 +103,16 @@ sonar.scm.disabled=true
 
 ### Ответ
 
-[maven-metadata.xml]()
+Артефакт найден в директории `~/.m2/repository/`
+```
+vagrant@server2:~/.m2/repository/netology/java/8_282$ ll
+total 76
+drwxrwxr-x 2 vagrant vagrant  4096 Jul 31 19:40 ./
+drwxrwxr-x 3 vagrant vagrant  4096 Jul 31 19:40 ../
+-rw-rw-r-- 1 vagrant vagrant 54980 Jul 31 19:40 java-8_282-distrib.tar.gz
+-rw-rw-r-- 1 vagrant vagrant    40 Jul 31 19:40 java-8_282-distrib.tar.gz.sha1
+-rw-rw-r-- 1 vagrant vagrant   388 Jul 31 19:40 java-8_282.pom.lastUpdated
+-rw-rw-r-- 1 vagrant vagrant   175 Jul 31 19:40 _remote.repositories
+```
+
+Файл [pom.xml](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-03-cicd/mvn/pom.xml)
