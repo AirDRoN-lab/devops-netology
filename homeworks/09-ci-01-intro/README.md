@@ -29,4 +29,19 @@
 
 ### Ответ
 
+Файлы с workflow:
+[WF для багов](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-01-intro/Workflow%20for%20Project%20PSC%20(for%20bugs).xml)<br>
+[WF для всех остальных задач](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-01-intro/Workflow%20for%20Project%20PSC%20(wo%20bugs).xml)
+
+Также сделано пара скринштов как WF, так и отчета по спринтам, задач и тд:
+
+<kbd>![Доска Kanban](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-01-intro/Kanban_board.GIF)</kbd>
+
+<kbd>![Отчет по спринту](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-01-intro/Sprint_report.GIF)</kbd>
+
+<kbd>![Список тасков и жуки](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-01-intro/Tasks_and_Bugs.GIF)</kbd>
+
+<kbd>![Воркфлоу для жуков](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-01-intro/WF_for_bugs.GIF)</kbd>
+
+<kbd>![Воркфлоу не для жуков](https://github.com/AirDRoN-lab/devops-netology/blob/main/homeworks/09-ci-01-intro/WF_wo_bugs.GIF)</kbd>
 
