@@ -20,10 +20,20 @@
 
 ### Ответ
 
-Freestyle Job сделана, [скриншот выполнения](FJ_success.PLG)
-Declarative Pipeline Job сделана, [скриншот выполнения](PL_success.JPG). Скрипт перенесен в репозиторий [здесь](pipeline/Jenkinsfile) и [здесь](https://github.com/AirDRoN-lab/ansible-vector-role/blob/main/Jenkinsfile).
-Multibranch Pipeline Pipeline Job сдалана, [скриншот выполнения](FJ_success.JPG).
-Scripted Pipeline создан, настроен параметр prod_run (тип boolen). Скрипт выложен в репозитории [здесь](./pipeline/ScriptedJenkinsfile). Скриншот выполнения pipeline [здесь](SCpipeline__success.JPG).
+Freestyle Job выполнена, [скриншот выполнения](FJ_success.JPG). Список команд джобы ниже:
+```bash
+pip3 install --user "molecule==3.5.2" "molecule_docker"
+molecule --version
+```
+
+Declarative Pipeline Job сделана, [скриншот выполнения](PL_success.JPG). Скрипт джобы перенесен в репозиторий [здесь](pipeline/Jenkinsfile) и в основной репозиторий ansible-vector-role [здесь](https://github.com/AirDRoN-lab/ansible-vector-role/blob/main/Jenkinsfile).
+
+Multibranch Pipeline Pipeline Job сделана, [скриншот выполнения](FJ_success.JPG).
+
+Scripted Pipeline создан, настроен параметр prod_run (тип boolen). Скрипт выложен в репозитории [здесь](./pipeline/ScriptedJenkinsfile) и в основной репозиторий ansible-vector-role [здесь](https://github.com/AirDRoN-lab/ansible-vector-role/blob/main/ScriptedJenkinsfile). Скриншот выполнения pipeline [здесь](SCpipeline__success.JPG).
+
+Итоговый [скриншот](All_pipeline.JPG) выполненных pipeline. Репозиторий с использованной ролью ansible-vector-role https://github.com/AirDRoN-lab/ansible-vector-role
+
 
 Во время отладки на ноде Jenkins были выполнены команды:
 
@@ -32,9 +42,11 @@ sudo usermod -a -G sudo jenkins
 sudo visudo 
 # добавлена строка jenkins ALL=(ALL) NOPASSWD: ALL
 ```
-
-Итоговый [скриншот](All_pipeline.JPG) выполненных pipeline. 
-Репозиторий с использованной ролью https://github.com/AirDRoN-lab/ansible-vector-role
+т.к. исполнение джобы на ноде отваливалось с ошибкой 
+```bash
+TASK [java : Ensure installation dir exists] ***********************************
+fatal: [localhost]: FAILED! => {"changed": false, "module_stderr": "sudo: a password is required\n", "module_stdout": "", "msg": "MODULE FAILURE\nSee stdout/stderr for the exact error", "rc": 1}
+```
 
 ## Необязательная часть
 
