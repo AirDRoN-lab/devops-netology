@@ -1,4 +1,4 @@
 ---
 # defaults file for operwfile
-path: "~/test.txt"
-content: "testcontent"
+path: '/home/vagrant/test.txt'
+content: 'testcontent'
