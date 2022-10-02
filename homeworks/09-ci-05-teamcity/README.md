@@ -12,7 +12,7 @@
 ### Ответ:
 
 Подготовлена ифраструктура в яндексе, [создано 3ВМ](YC_VMs.JPG).<br>
-Форк репозитория https://github.com/aragastmatb/example-teamcity [здесь](https://github.com/AirDRoN-lab/example-teamcity).
+СДелан [форк](https://github.com/AirDRoN-lab/example-teamcity).
 
 ## Основная часть
 
@@ -58,7 +58,6 @@ public String sayHunter(){
 Изменения выложены в репозиторий, сборка завпустилась автоматически по ветке `feature/add_reply`, пройдены тесты. Но в nexus артефакт не попал, т.к. необходимо изменить `<version>` в [pom.xml](pom.xml).
 После изменения pom.xml `<version>0.0.3</version>` [артефакт](Nexus_Artifacts.JPG) в Nexus появился (версия 0.0.3).
 
-Итория всех проведенных сборок в TC на [скриншоте](TC_history.JPG) <br>
+Итория всех проведенных сборок в TC на [скриншоте](TC_history.JPG). <br>
 Cсылка на репозиторий https://github.com/AirDRoN-lab/example-teamcity <br>
-[файл1](tc_config1_formaster.cfg) конфигурации Teamcity <br>
-[файл2](tc_config2_forfeature.cfg) конфигурации Teamcity <br>
+[файл1](tc_config1_formaster.cfg) и [файл2](tc_config2_forfeature.cfg) конфигурации Teamcity. Но конфигурация по факту одна, так как условие билдстепа было написано в начале. <br>
