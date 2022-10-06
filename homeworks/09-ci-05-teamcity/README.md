@@ -12,7 +12,8 @@
 ### Ответ:
 
 Подготовлена ифраструктура в яндексе, [создано 3ВМ](YC_VMs.JPG).<br>
-СДелан [форк](https://github.com/AirDRoN-lab/example-teamcity).
+Сделан [форк](https://github.com/AirDRoN-lab/example-teamcity).
+Доступ к TeamCity по порту 8111, к Nexus 8081.
 
 ## Основная часть
 
@@ -37,6 +38,7 @@
 19. В ответ предоставьте ссылку на репозиторий
 
 ### Ответ:
+Загружен SSH ключ (публичный) для работы с репозиторием. Выполнена настройка Versioned Settings проекта Netology для выгрузки конфигурации. [Скриншот настроек](Vers_config.JPG)  
 Для решения п.4 было создано два билдстепа с разными условиями: `teamcity.build.branch does not equal master` и `teamcity.build.branch equals master`. В итоге выполняется, либо первый с `mvn clean deploy`, либо второй с `mvn clean deploy`. Файл конфигурации maven [settings.xml](settings.xml) в котором был изменены только nexus id.
 Файл конфигурации проекта maven [pom.xml](pom.xml), в котором изменен Nexus ip и id (изначально было `<version>0.0.3</version>`). <br>
 При первом запуске сборки (по master) все прошло успешно, артефакт выложен в Nexus, версия 0.0.2. [Скриншот](Nexus_Artifacts.JPG).
