@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hello-world
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-deployment
+  namespace: hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      namespace: hello-world
+      labels:
+        app: hello
+    spec:
+      containers:
+        - name: hello-world
+          image: cr.yandex/crp0vqthb2eggu1apf2f/hello:__VERSION__
+          imagePullPolicy: Always
