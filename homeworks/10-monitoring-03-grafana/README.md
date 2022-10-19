@@ -98,7 +98,7 @@ ubuntu@netbox:/opt/node_exporter$ docker-compose up -d
 docker run --name=bindexporter --network host -p 9101:9100 -d prometheuscommunity/bind-exporter:v0.5.0 --bind.stats-url http://10.129.144.183:8953
 ```
 
-Добавлены таргеты в Prometheus, [Prometheus_target.JPG](Prometheus_target.JPG).
+Добавлены таргеты в Prometheus, [Prometheus_targets.JPG](Prometheus_targets.JPG).
 
 В Grafana добавляем источник данных Prometheus `http://10.129.144.183:9090`, [Grafana_sources.JPG](Grafana_sources.JPG).
 
