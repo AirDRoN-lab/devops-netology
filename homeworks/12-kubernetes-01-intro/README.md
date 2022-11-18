@@ -258,8 +258,11 @@ BODY:
 ```
 
 Вариант со сборкой своего Docker образа "Hello World", собираем образ по туториалу k8s (ссылка выше).
-Исходники в директории [Dockerfile](hello-k8s/Dockerfile) и [server.js](hello-k8s/server.js)
+Исходники в директории [Dockerfile](hello-k8s/Dockerfile) и [server.js](hello-k8s/server.js). <br>
+Cоздаем переменные окружения Docker для Minikube с помощью команды `minikube docker-env`.
 ```
+vagrant@server3:~$ eval $(minikube docker-env)
+
 vagrant@server3:~$ docker build -t hello-k8s:1.0.0 .
 vagrant@server3:~/REPO/devops-netology/homeworks/12-kubernetes-01-intro/hello-k8s$ docker image ls
 REPOSITORY                                      TAG       IMAGE ID       CREATED         SIZE
