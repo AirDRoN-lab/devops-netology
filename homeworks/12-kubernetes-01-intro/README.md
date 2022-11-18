@@ -215,7 +215,7 @@ kustomizeVersion: v4.5.7
 
 ```
 
-Сделаем под доступным для публичной сети. Запустим сервис.
+Сделаем под hello-node доступным за пределами кластера. Запустим сервис.
 ```
 vagrant@server3:~/REPO$ kubectl expose deployment hello-node --type=LoadBalancer --port=8080
 service/hello-node exposed
@@ -235,6 +235,7 @@ vagrant@server3:~/REPO$ minikube service hello-node
   http://192.168.49.2:31159
 ```
 
+Проверяем с помощью curl:
 ```
 vagrant@server3:~/REPO$ curl http://192.168.49.2:31159/
 CLIENT VALUES:
@@ -256,3 +257,36 @@ BODY:
 -no body in request-
 ```
 
+Вариант со сборкой своего Docker образа "Hello World", собираем образ по туториалу k8s (ссылка выше):
+```
+vagrant@server3:~$ docker build -t hello-k8s:1.0.0 .
+vagrant@server3:~/REPO/devops-netology/homeworks/12-kubernetes-01-intro/hello-k8s$ docker image ls
+REPOSITORY                                      TAG       IMAGE ID       CREATED         SIZE
+hello-k8s                                       1.0.0     a0cf79a363fa   12 hours ago    660MB
+
+vagrant@server3:~/REPO/devops-netology/homeworks/12-kubernetes-01-intro/hello-k8s$ kubectl create deployment hello-k8s --image=hello-k8s:1.0.0 --port=8080
+deployment.apps/hello-k8s created
+
+vagrant@server3:~/REPO/devops-netology/homeworks/12-kubernetes-01-intro/hello-k8s$ kubectl expose deployment hello-k8s --type=NodePort
+service/hello-k8s exposed
+
+vagrant@server3:~/REPO/devops-netology/homeworks/12-kubernetes-01-intro/hello-k8s$ kubectl get service
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+hello-k8s    NodePort    10.107.38.239   <none>        8080:31126/TCP   21s
+
+vagrant@server3:~/REPO/devops-netology/homeworks/12-kubernetes-01-intro/hello-k8s$ minikube service hello-k8s
+|-----------|-----------|-------------|---------------------------|
+| NAMESPACE |   NAME    | TARGET PORT |            URL            |
+|-----------|-----------|-------------|---------------------------|
+| default   | hello-k8s |        8080 | http://192.168.49.2:31126 |
+|-----------|-----------|-------------|---------------------------|
+* Opening service default/hello-k8s in default browser...
+  http://192.168.49.2:31126
+
+```
+
+Проверяем с помощью curl:
+```
+vagrant@server3:~/REPO/devops-netology/homeworks/12-kubernetes-01-intro/hello-k8s$ curl http://192.168.49.2:31126
+Hello k8s Beginners!
+```
