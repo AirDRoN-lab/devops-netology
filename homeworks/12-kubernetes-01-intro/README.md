@@ -81,6 +81,12 @@ kubelet: Running
 apiserver: Running
 kubeconfig: Configured
 ```
+Внутренний кластерный адрес 192.168.49.2, внешний none:
+```
+vagrant@server3:~$ kubectl get nodes -o wide
+NAME       STATUS   ROLES           AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+minikube   Ready    control-plane   5d23h   v1.25.3   192.168.49.2   <none>        Ubuntu 20.04.5 LTS   5.15.0-30-generic   docker://20.10.20
+```
 
 ## Задача 2: Запуск Hello World
 
