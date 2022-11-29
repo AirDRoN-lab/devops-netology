@@ -13,6 +13,9 @@
 
 ## ОТВЕТ на задание 1:
 
+Для выполнения задания используем контейнер `hello-k8s:1.0.0`, собранный на предыдущем домашнем задании.
+Создаем деплоймент с двумя репликами и проверяем.
+
 ```
 vagrant@server3:~/REPO/devops-netology/homeworks/12-kubernetes-01-intro$ kubectl create deployment hello-k8s --image=hello-k8s:1.0.0 --port=8080 --replicas=2
 deployment.apps/hello-k8s created
@@ -168,10 +171,15 @@ Events:                      <none>
 
 ## ОТВЕТ на задание 3
 
+Увеличим количество реплик до 5 с помощью 'kubectl scale':
+
 ```sh
 vagrant@server3:~$ kubectl scale deployments hello-k8s --replicas=5
 deployment.apps/hello-k8s scaled
+```
 
+Проверяем: 
+```
 vagrant@server3:~$ kubectl get pods
 NAME                         READY   STATUS              RESTARTS   AGE
 busybox                      1/1     Running             0          8h
@@ -189,7 +197,10 @@ hello-k8s-775d494f74-jn7l2   1/1     Running   0          8s
 hello-k8s-775d494f74-lk25j   1/1     Running   0          8s
 hello-k8s-775d494f74-rnndc   1/1     Running   0          5m4s
 ```
+Все ок. Домашнее задание готово.
 
+PS:
+Не уверен, что выбрано оптимальное решение задания 2 используя серивсный аккаунт. Но альтернативного пути не нашел.
 
 
 

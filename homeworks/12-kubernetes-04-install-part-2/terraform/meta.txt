@@ -1,0 +1,7 @@
+#cloud-config
+users:
+  - name: dgolodnikov 
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys: [ssh-rsa AAAAB3NXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXhULYGV0= dgolodnikov@pve-vm1]
