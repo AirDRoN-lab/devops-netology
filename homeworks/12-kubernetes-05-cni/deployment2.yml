@@ -1,0 +1,28 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "dpl-javacurl"
+  namespace: "default"
+  labels:
+    app: "lb-javacurl"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "lb-javacurl"
+  template:
+    metadata:
+      labels:
+        app: "lb-javacurl"
+    spec:
+      containers:
+        - name: "cnt-javacurl"
+          image: "dgolodnikov/hello-k8s:1"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

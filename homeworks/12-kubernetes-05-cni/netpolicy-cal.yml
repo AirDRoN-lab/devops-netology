@@ -1,0 +1,42 @@
+apiVersion: projectcalico.org/v3
+kind: HostEndpoint
+metadata:
+  name: node2-ens18
+  labels:
+    host-endpoint: ext-interface
+spec:
+  interfaceName: ens18
+  node: node2
+---
+apiVersion: projectcalico.org/v3
+kind: HostEndpoint
+metadata:
+  name: node3-ens18
+  labels:
+    host-endpoint: ext-interface
+spec:
+  interfaceName: ens18
+  node: node3
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+Metadata:
+  name: deny-from-untrust-calico
+Spec:
+  preDNAT: true
+  applyOnForward: true
+  ingress:
+  - action: Log
+    protocol: TCP
+    #source:
+    #    nets: [192.168.8.0/24]
+    destination:
+        ports: [32123]
+  - action: Deny
+    protocol: TCP
+    source:
+        nets: [192.168.8.21/32]
+    destination:
+        ports: [32123]
+  selector: host-endpoint == 'ext-interface'
+
