@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: geocode
+subsets:
+  - addresses:
+    - ip:  213.180.193.58
+    ports:
+    - port: 80
+
+
+
+
