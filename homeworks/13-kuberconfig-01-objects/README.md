@@ -156,5 +156,5 @@ kubectl get svc -o wide <br>
 kubectl get pvc,pv <br>
 kubectl get statefulset <br>
 kubectl logs <pod_name> <br>
-kubectl exec -it <pod_name> -- <command> <br>
+kubectl exec -it <pod_name> -- <command_name> <br>
  
