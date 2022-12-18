@@ -67,9 +67,9 @@ kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          17d   <
 
 ## Ответ
 
-Немного перепишем манифесты так, как требуется в задании. Переменные окружения добавим в манифесты deployment. Сделаем два отельных деплоймента для фронтенда и для бекенда.
-[Манифест для подов](manifests/40-task2_pods.yaml)
-[Манифест для сервиса](manifests/30-task2_service.yaml)
+Немного перепишем манифесты так, как требуется в задании. Переменные окружения добавим в манифесты deployment. Сделаем два отельных деплоймента для фронтенда и для бекенда.<br>
+[Манифест для подов](manifests/40-task2_pods.yaml)<br>
+[Манифест для сервиса](manifests/30-task2_service.yaml)<br>
 
 Проверям наличие переменных оуржения внутри контейнера после деплоя:
 ```
@@ -123,7 +123,7 @@ subsets:
 ```
 
 Для проверки потербуется APIkey, его полчим через ЛК Yandex. 
-Итоговые манифесты:
+Итоговые манифесты:<br>
 [manifests/40-task2_pods.yaml](manifests/40-task2_pods.yaml)<br>
 [manifests/50-task3_ep.yaml](manifests/50-task3_ep.yaml)<br>
 [manifests/60-task3_service.yaml](manifests/60-task3_service.yaml)<br>
