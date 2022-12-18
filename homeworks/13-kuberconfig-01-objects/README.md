@@ -149,12 +149,12 @@ subsets:
 Ответ получен. Доступ к внешнему сервису получен через endpoint из пода внутри кластера. 
 В сurl необходимо указать домен через ключ -H `-H "Host: geocode-maps.yandex.ru"` в противном сулчае в HTTP заголовок не помещается запись о реальном домене, а это в случае с данным сервисом необходимо.
 
-PS: часто импользуемые команды
-kubectl get pods -o wide
-kubectl get endpoints
-kubectl get svc -o wide
-kubectl get pvc,pv
-kubectl get statefulset
-kubectl logs <pod_name>
-kubectl exec -it <pod_name> -- <command>
-
+PS: часто импользуемые команды <br>
+kubectl get pods -o wide <br>
+kubectl get endpoints <br>
+kubectl get svc -o wide <br>
+kubectl get pvc,pv <br>
+kubectl get statefulset <br>
+kubectl logs <pod_name> <br>
+kubectl exec -it <pod_name> -- <command> <br>
+ 
