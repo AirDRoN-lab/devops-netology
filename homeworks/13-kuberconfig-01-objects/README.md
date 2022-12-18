@@ -151,17 +151,19 @@ subsets:
 
 ## Состояние кластера после выполнения ДЗ
 
-```
+```sh
 golodnikov@pve-vm1:~$ kubectl get nodes
 NAME             STATUS   ROLES           AGE   VERSION
 pve-kube-cp1     Ready    control-plane   19d   v1.25.4
 pve-kube-node1   Ready    <none>          18d   v1.25.4
 pve-kube-node2   Ready    <none>          18d   v1.25.4
+
 dgolodnikov@pve-vm1:~$ kubectl get pods -o wide
 NAME                     READY   STATUS    RESTARTS   AGE   IP            NODE             NOMINATED NODE   READINESS GATES
 back-56849f497d-pt95n    1/1     Running   0          22h   10.244.2.13   pve-kube-node2   <none>           <none>
 dbweb-0                  1/1     Running   0          22h   10.244.1.7    pve-kube-node1   <none>           <none>
 front-7fff466675-kt9dp   1/1     Running   0          22h   10.244.2.12   pve-kube-node2   <none>           <none>
+
 dgolodnikov@pve-vm1:~$ kubectl get svc -o wide
 NAME             TYPE           CLUSTER-IP       EXTERNAL-IP                     PORT(S)          AGE     SELECTOR
 back             NodePort       10.107.203.132   <none>                          9000:30001/TCP   22h     app=backweb
@@ -171,6 +173,7 @@ geocode          ClusterIP      None             <none>                         
 geocode-domain   ExternalName   <none>           geocode-maps.yandex.ru          <none>           3h51m   <none>
 kubernetes       ClusterIP      10.96.0.1        <none>                          443/TCP          22h     <none>
 sandbox          ExternalName   <none>           api-sandbox.direct.yandex.com   <none>           4h24m   <none>
+
 dgolodnikov@pve-vm1:~$ kubectl get endpoints -o wide
 NAME         ENDPOINTS           AGE
 back         10.244.2.13:9000    22h
@@ -178,16 +181,19 @@ dbweb        10.244.1.7:5432     22h
 front        10.244.2.12:80      22h
 geocode      213.180.193.58:80   3h51m
 kubernetes   192.168.8.30:6443   22h
+
 dgolodnikov@pve-vm1:~$ kubectl get statefulset -o wide
 NAME    READY   AGE   CONTAINERS   IMAGES
 dbweb   1/1     22h   postgres     postgres:13-alpine
+
 dgolodnikov@pve-vm1:~$ kubectl get pvc -o wide
 NAME           STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE   VOLUMEMODE
 pvc-postgres   Bound    pv       1Gi        RWO                           22h   Filesystem
-dgolodnikov@pve-vm1:~$
+
 dgolodnikov@pve-vm1:~$ kubectl get pv -o wide
 NAME   CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                  STORAGECLASS   REASON   AGE   VOLUMEMODE
 pv     1Gi        RWO            Retain           Bound    default/pvc-postgres                           22h   Filesystem
+
 dgolodnikov@pve-vm1:~$ kubectl get deploy -o wide
 NAME    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                           SELECTOR
 back    1/1     1            1           22h   backend      dgolodnikov/netobackend:1.0.0    app=backweb
