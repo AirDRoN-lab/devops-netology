@@ -1,0 +1,151 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontweb
+  name: frontend
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: frontweb
+  template:
+    metadata:
+      labels:
+        app: frontweb
+    spec:
+      containers:
+      - image: "dgolodnikov/netofrontend:1.0.0"
+        imagePullPolicy: IfNotPresent
+        name: front
+        env:
+        - name: BASE_URL
+          value: "http://backweb:30001"
+        volumeMounts:
+        - mountPath: "/static-front"
+          name: pers-volume
+      volumes:
+        - name: pers-volume
+          persistentVolumeClaim:
+            claimName: dynamic-vc-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: backweb
+  name: back
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: backweb
+  template:
+    metadata:
+      labels:
+        app: backweb
+    spec:
+      containers:
+      - image: "dgolodnikov/netobackend:1.0.0"
+        imagePullPolicy: IfNotPresent
+        name: backend
+        env:
+        - name: DATABASE_URL
+          value: "postgres://postgres:postgres@dbweb:5432/news"
+        volumeMounts:
+        - mountPath: "/static-back"
+          name: pers-volume
+      volumes:
+        - name: pers-volume
+          persistentVolumeClaim:
+            claimName: dynamic-vc-test
+---
+apiVersion: apps/v1 
+kind: StatefulSet
+metadata:
+  name: dbweb
+  namespace: default
+  labels:
+    app: dbweb
+spec:
+  replicas: 1
+  updateStrategy:
+    type: "RollingUpdate"
+  selector:
+    matchLabels:
+      app: dbweb
+  template:
+    metadata:
+      labels:
+        app: dbweb
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13-alpine
+          imagePullPolicy: "IfNotPresent"
+          env:
+          - name: POSTGRES_PASSWORD
+            value: postgres
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_DB
+            value: news
+          - name: PGDATA
+            value: /data
+          volumeMounts:
+            - name: postgres-volume
+              mountPath: /data
+      volumes:
+        - name: postgres-volume
+          persistentVolumeClaim:
+            claimName: pvc-postgres
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dynamic-vc-test
+spec:
+  storageClassName: "nfs"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-postgres 
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/pv
+---
