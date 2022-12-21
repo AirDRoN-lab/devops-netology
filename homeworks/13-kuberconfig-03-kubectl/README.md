@@ -20,13 +20,14 @@ pve-kube-node1   Ready    <none>          21d   v1.25.4
 pve-kube-node2   Ready    <none>          21d   v1.25.4
 ```
 
-Выполним установку praqma/network-multitool:alpine-extra для тестирования доступности узлов изнутри кластера, подготовим манифест [10-multitool.yaml](manifests/10-multitool.yaml):
+Выполним установку `praqma/network-multitool:alpine-extra` для тестирования доступности узлов изнутри кластера, подготовим манифест [10-multitool.yaml](manifests/10-multitool.yaml). Установим Dbeaver для провеки доступа к БД https://dbeaver.io/files/dbeaver-ce-latest-x86_64-setup.exe
 
 
 ## Ответ
 
-Проверим доступ через `exec` подготовленного пода network-multitool.
+Проверим доступ через `exec` c подготовленного пода network-multitool.
 
+Проверяем доступ к БД:
 ```
 dgolodnikov@pve-vm1:~$ kubectl exec -it multitool-68cf8b75ff-fhcvb -- psql postgres://postgres:postgres@dbweb:5432 -c "\l"
                                  List of databases
@@ -40,6 +41,7 @@ dgolodnikov@pve-vm1:~$ kubectl exec -it multitool-68cf8b75ff-fhcvb -- psql postg
            |          |          |            |            | postgres=CTc/postgres
 (4 rows)
 ```
+Проверяем доступ к frontend:
 ```
 dgolodnikov@pve-vm1:~$ kubectl exec -it multitool-68cf8b75ff-fhcvb -- curl front
 <!DOCTYPE html>
@@ -59,12 +61,13 @@ dgolodnikov@pve-vm1:~$ kubectl exec -it multitool-68cf8b75ff-fhcvb -- curl front
 </body>
 </html>
 ```
+Проверяем доступ к backend:
 ```
 dgolodnikov@pve-vm1:~$  kubectl exec -it multitool-68cf8b75ff-fhcvb -- curl back:9000
 {"detail":"Not Found"}
 ```
 
-Выполним `port-forward` на локальную машину:
+Выполним `port-forward` всех по очереди подов на локальную машину:
 ```
   22/12/2022   00:33.16   /home/mobaxterm  kubectl port-forward pods front-7fff466675-j8sb2 8080:80
 Forwarding from 127.0.0.1:8080 -> 80
@@ -101,6 +104,8 @@ Handling connection for 5432
 При работе с приложением иногда может потребоваться вручную добавить пару копий. Используя команду kubectl scale, попробуйте увеличить количество бекенда и фронта до 3. Проверьте, на каких нодах оказались копии после каждого действия (kubectl describe, kubectl get pods -o wide). После уменьшите количество копий до 1.
 
 ## Ответ:
+
+Текущее состояние подов по 1й реплике:
 
 ```
 dgolodnikov@pve-vm1:~$ kubectl get deploy
