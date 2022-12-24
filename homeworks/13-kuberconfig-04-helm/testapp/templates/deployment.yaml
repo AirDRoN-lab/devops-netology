@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- include "testapp.labels" . | nindent 4 }}
+  name: {{ include "testapp.fullname" . }}-front
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app:  {{ .Release.Name -}} - {{- .Values.metadata.labels.appfront }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name -}} - {{- .Values.metadata.labels.appfront }}
+    spec:
+      containers:
+      - image: "dgolodnikov/netofrontend: {{- .Chart.AppVersion }}"
+        imagePullPolicy: IfNotPresent
+        name: {{ include "testapp.fullname" . }}-front
+        env:
+        - name: BASE_URL
+          value: "http://backip:{{- .Values.BackPort  }}"
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  labels:
+    {{- include "testapp.labels" . | nindent 4 }}
+  name: {{ include "testapp.fullname" . }}-back
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name -}} - {{- .Values.metadata.labels.appback }}
+  template:
+    metadata:
+      labels:
+        app:  {{ .Release.Name -}} - {{- .Values.metadata.labels.appback }}
+    spec:
+      containers:
+      - image: "dgolodnikov/netobackend: {{- .Chart.AppVersion }}"
+        imagePullPolicy: IfNotPresent
+        name: {{ include "testapp.fullname" . }}-back
+        env:
+        - name: DATABASE_URL
+          value: "postgres://postgres:postgres@{{- include "testapp.fullname" . -}}-db-svc:5432/news"
+---
+apiVersion: apps/v1 
+kind: StatefulSet
+metadata:
+  name: {{ include "testapp.fullname" . }}-db
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "testapp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  updateStrategy:
+    type: "RollingUpdate"
+  selector:
+    matchLabels:
+      app:  {{ .Release.Name -}} - {{- .Values.metadata.labels.appdbweb }}
+  template:
+    metadata:
+      labels:
+        app:  {{ .Release.Name -}} - {{- .Values.metadata.labels.appdbweb }}
+    spec:
+      containers:
+        - name: {{ include "testapp.fullname" . }}-db
+          image: postgres:13-alpine
+          imagePullPolicy: "IfNotPresent"
+          env:
+          - name: POSTGRES_PASSWORD
+            value: postgres
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_DB
+            value: news
+          - name: PGDATA
+            value: /data
+          volumeMounts:
+            - name: postgres-volume
+              mountPath: /data
+      volumes:
+        - name: postgres-volume
+          persistentVolumeClaim:
+            claimName:  {{ .Release.Name -}} -pvc-postgres

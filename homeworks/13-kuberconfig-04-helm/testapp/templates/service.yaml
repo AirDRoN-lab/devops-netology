@@ -1,0 +1,44 @@
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{ include "testapp.fullname" . }}-front-svc
+spec:
+  selector:
+    app: {{ .Release.Name -}} - {{- .Values.metadata.labels.appfront }}
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: {{ .Values.FrontPort }}
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name:  {{ include "testapp.fullname" . }}-back-svc
+spec:
+  selector:
+    app: {{ .Release.Name -}} - {{- .Values.metadata.labels.appback }}
+  type: NodePort
+  ports:
+    - name: http
+      port: 9000
+      targetPort: 9000
+      nodePort: {{ .Values.BackPort }}
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{ include "testapp.fullname" . }}-db-svc
+spec:
+  selector:
+    app: {{ .Release.Name -}} - {{- .Values.metadata.labels.appdbweb }}
+  type: ClusterIP
+  ports:
+    - name: db
+      port: 5432
+      targetPort: 5432
+      protocol: TCP   

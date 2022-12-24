@@ -1,0 +1,14 @@
+replicaCount: 1
+namespace: default
+
+nameOverride: ""
+fullnameOverride: ""
+
+metadata:
+  labels:
+    appfront: frontend-web
+    appback: beckend-web
+    appdbweb: main-db
+
+FrontPort: 30100
+BackPort: 30001
