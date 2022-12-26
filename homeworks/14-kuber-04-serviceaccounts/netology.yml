@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2022-12-26T18:23:57Z"
+  name: netology
+  namespace: default
+  resourceVersion: "2226983"
+  uid: 2fac5dad-a5da-419e-a598-eb7c2eef8109
