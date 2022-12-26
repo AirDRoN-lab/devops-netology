@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontweb
+  name: front
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontweb
+  template:
+    metadata:
+      labels:
+        app: frontweb
+    spec:
+      containers:
+      - image: "dgolodnikov/netofrontend:1.0.0"
+        imagePullPolicy: IfNotPresent
+        name: front
+        env:
+        - name: BASE_URL
+          value: "http://backweb:30001"
+        envFrom:
+        - configMapRef:
+            name: domain
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: nginx-config
+            items:
+            - key: nginx.conf
+              path: nginx
+        

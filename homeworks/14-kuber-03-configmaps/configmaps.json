@@ -1,0 +1,54 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "data": {
+                "name": "netology.ru"
+            },
+            "kind": "ConfigMap",
+            "metadata": {
+                "creationTimestamp": "2022-12-26T16:05:27Z",
+                "name": "domain",
+                "namespace": "default",
+                "resourceVersion": "2211173",
+                "uid": "1a320cf5-1294-42d3-b3f9-1733d503bb54"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "data": {
+                "ca.crt": "-----BEGIN CERTIFICATE-----\nMIIC/jCCAeagAwIBAgIBADANBgkвn9rUArcyXwKfY\nKnQ=\n-----END CERTIFICATE-----\n"
+            },
+            "kind": "ConfigMap",
+            "metadata": {
+                "annotations": {
+                    "kubernetes.io/description": "Contains a CA bundle that can be used to verify the kube-apiserver when using internal endpoints such as the internal service IP or kubernetes.default.svc. No other usage is guaranteed across distributions of Kubernetes clusters."
+                },
+                "creationTimestamp": "2022-11-28T18:54:10Z",
+                "name": "kube-root-ca.crt",
+                "namespace": "default",
+                "resourceVersion": "355",
+                "uid": "36b3e77f-d7e1-424b-8809-d45b484e2085"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "data": {
+                "nginx.conf": "server {\n    listen 80;\n    server_name  netology.ru www.netology.ru;\n    access_log  /var/log/nginx/domains/netology.ru-access.log  main;\n    error_log   /var/log/nginx/domains/netology.ru-error.log info;\n    location / {\n        include proxy_params;\n        proxy_pass http://10.10.10.10:8080/;\n    }\n}\n"
+            },
+            "kind": "ConfigMap",
+            "metadata": {
+                "creationTimestamp": "2022-12-26T16:05:00Z",
+                "name": "nginx-config",
+                "namespace": "default",
+                "resourceVersion": "2211121",
+                "uid": "3656e6f0-23c0-4d49-830b-3183c20e4e57"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
