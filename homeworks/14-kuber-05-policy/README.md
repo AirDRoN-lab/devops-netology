@@ -193,3 +193,87 @@ dgolodnikov@pve-vm1:~$ curl 192.168.8.40:30002
 ```
 
 Соответсввенно, `team-b.tb` и `team-a.ta` могут общаться только между собой внутри кластера (причем по DNS имени в том числе). При этом у `team-b.tb` есть выход в Интернет, а у `team-a` нет. Что и требовалось в задании. 
+
+
+PS:
+В доп. задании странно отработал раскоментированный блок в манифесте [manifests/21-netpolicy01_test.yaml](manifests/21-netpolicy01_test.yaml). Отличие от рабочего [manifests/20-netpolicy01.yaml](manifests/20-netpolicy01.yaml) заключается в раскоментированном блоке:
+
+```
+    # - namespaceSelector:
+    #     matchLabels:
+    #       name: kube-system 
+```
+По отступам, насколько позволяет опыт, проблем не увидел. Namespace существует. Доступа к DNS нет, причина выесняется.
+
+Применили проблемный манифест [manifests/21-netpolicy01_test.yaml](manifests/21-netpolicy01_test.yaml).
+```
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/14-kuber-05-policy/manifests$ kubectl apply -f 21-netpolicy01_test.yaml 
+networkpolicy.networking.k8s.io/team-a-egress configured
+```
+
+Доступа к DNS нет:
+```
+root@ta:/# nslookup ngs.ru
+Server:         169.254.25.10
+Address:        169.254.25.10#53
+
+Non-authoritative answer:
+Name:   ngs.ru
+Address: 195.19.220.25
+
+root@ta:/# nslookup ngs.ru
+;; connection timed out; no servers could be reached
+```
+
+Применили рабочий манифест [manifests/20-netpolicy01_test.yaml](manifests/20-netpolicy01.yaml).
+```
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/14-kuber-05-policy/manifests$ kubectl apply -f 21-netpolicy01_test.yaml 
+networkpolicy.networking.k8s.io/team-a-egress configured
+```
+Резолв домена есть
+```
+root@ta:/# nslookup ngs.ru
+Server:         169.254.25.10
+Address:        169.254.25.10#53
+
+Non-authoritative answer:
+Name:   ngs.ru
+Address: 195.19.220.25
+```
+Причина пока не понятна. Ниже описание текущего кластера. 
+
+```
+dgolodnikov@pve-vm1:~$ kubectl get namespaces --show-labels
+NAME              STATUS   AGE     LABELS
+default           Active   26d     kubernetes.io/metadata.name=default
+kube-node-lease   Active   26d     kubernetes.io/metadata.name=kube-node-lease
+kube-public       Active   26d     kubernetes.io/metadata.name=kube-public
+kube-system       Active   26d     kubernetes.io/metadata.name=kube-system
+team-a            Active   4h47m   app=team-a,kubernetes.io/metadata.name=team-a
+team-b            Active   4h47m   app=team-b,kubernetes.io/metadata.name=team-b
+```
+```
+dgolodnikov@pve-vm1:~$ kubectl get pods -n kube-system --show-labels
+NAME                                      READY   STATUS    RESTARTS       AGE   LABELS
+calico-kube-controllers-d6484b75c-wzql2   1/1     Running   4 (12d ago)    26d   k8s-app=calico-kube-controllers,pod-template-hash=d6484b75c
+calico-node-2nsmh                         1/1     Running   3 (6h9m ago)   26d   controller-revision-hash=7b99df8b86,k8s-app=calico-node,pod-template-generation=1
+calico-node-l765z                         1/1     Running   3 (12d ago)    26d   controller-revision-hash=7b99df8b86,k8s-app=calico-node,pod-template-generation=1
+calico-node-qdlbk                         1/1     Running   3 (6h9m ago)   26d   controller-revision-hash=7b99df8b86,k8s-app=calico-node,pod-template-generation=1
+coredns-588bb58b94-gtmrw                  1/1     Running   3 (6h9m ago)   26d   k8s-app=kube-dns,pod-template-hash=588bb58b94
+coredns-588bb58b94-jjtbp                  1/1     Running   3 (6h9m ago)   26d   k8s-app=kube-dns,pod-template-hash=588bb58b94
+dns-autoscaler-5b9959d7fc-662hq           1/1     Running   3 (6h9m ago)   26d   k8s-app=dns-autoscaler,pod-template-hash=5b9959d7fc
+kube-apiserver-cp1                        1/1     Running   4 (6h9m ago)   26d   component=kube-apiserver,tier=control-plane
+kube-controller-manager-cp1               1/1     Running   4 (6h9m ago)   26d   component=kube-controller-manager,tier=control-plane
+kube-proxy-c49t2                          1/1     Running   3 (6h9m ago)   26d   controller-revision-hash=86459f8b99,k8s-app=kube-proxy,pod-template-generation=1
+kube-proxy-jwbhz                          1/1     Running   3 (6h9m ago)   26d   controller-revision-hash=86459f8b99,k8s-app=kube-proxy,pod-template-generation=1
+kube-proxy-nz7mp                          1/1     Running   3 (6h9m ago)   26d   controller-revision-hash=86459f8b99,k8s-app=kube-proxy,pod-template-generation=1
+kube-scheduler-cp1                        1/1     Running   4 (6h9m ago)   26d   component=kube-scheduler,tier=control-plane
+nginx-proxy-node2                         1/1     Running   3 (12d ago)    26d   addonmanager.kubernetes.io/mode=Reconcile,k8s-app=kube-nginx
+nginx-proxy-node3                         1/1     Running   3 (6h9m ago)   26d   addonmanager.kubernetes.io/mode=Reconcile,k8s-app=kube-nginx
+nodelocaldns-2ncc6                        1/1     Running   5 (6h9m ago)   26d   controller-revision-hash=744f664d5c,k8s-app=nodelocaldns,pod-template-generation=1
+nodelocaldns-k2rx8                        1/1     Running   3 (6h9m ago)   26d   controller-revision-hash=744f664d5c,k8s-app=nodelocaldns,pod-template-generation=1
+nodelocaldns-pkgx8                        1/1     Running   3 (6h9m ago)   26d   controller-revision-hash=744f664d5c,k8s-app=nodelocaldns,pod-template-generation=1
+
+```
+ 
+

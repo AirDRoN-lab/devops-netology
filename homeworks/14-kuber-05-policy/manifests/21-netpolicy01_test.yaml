@@ -12,9 +12,9 @@ spec:
   - Egress
   egress:
   - to:
-    # - namespaceSelector:
-    #     matchLabels:
-    #       name: kube-system 
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system 
     ports:
     - protocol: UDP
       port: 53
