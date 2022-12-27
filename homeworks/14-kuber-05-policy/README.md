@@ -152,8 +152,8 @@ dgolodnikov@pve-vm1:~$ curl 192.168.8.40:30001
 </html>
 ```
 
-Запретим ta выход в интернет, манифест [manifests/20-netpolicy01.yaml](manifests/20-netpolicy01.yaml) или [manifests/30-netpolicy02.yaml](manifests/30-netpolicy02.yaml) или [manifests/40-netpolicy03.yaml](manifests/40-netpolicy03.yaml).
-Три манифеста дают одинаковый эффект (в части ограничения выхода в Интернет). В первом случае разрешен трафик только в серую подсеть 192.168.0.0/16 и 10/8, во втором случае у нас разрешен трафик только к конкретному неймспейсу c метками `team-b`, а третий вариант дополниьельно проверяет еще и метку пода, она должна быть tb. В противном случае доступа не будет (по tcp/80).
+Запретим `ta` выход в интернет, манифест [manifests/20-netpolicy01.yaml](manifests/20-netpolicy01.yaml) или [manifests/30-netpolicy02.yaml](manifests/30-netpolicy02.yaml) или [manifests/40-netpolicy03.yaml](manifests/40-netpolicy03.yaml).
+Три манифеста дают одинаковый эффект (в части ограничения выхода в Интернет). В первом случае разрешен трафик только в серую подсеть 192.168.0.0/16 и 10/8, во втором случае у нас разрешен трафик только к конкретному неймспейсу c метками `team-b`, а третий вариант дополниьельно проверяет еще и метку пода, она должна быть `tb`. В противном случае доступа не будет (по tcp/80).
 
 ```
 dgolodnikov@pve-vm1:~$ kubectl exec -it -n team-a ta -- bash
@@ -161,8 +161,8 @@ root@ta:/# curl google.com
 ^C
 ```
 
-Что касается пода a в namespase team-а, то там разреш полностью любой трафик, т.к. нет ни одной политики затрагивающей под (а по дефолту default to allow). Создадим манифест разрешающий только трафик с пода tb неймспейса team-b. Манифест [manifests/50-netpolicy04.yaml](manifests/50-netpolicy04.yaml).
-Применим магифест и проверим доступ снаружи к поду tb (namespace team-b).
+Что касается пода a в namespase `team-а`, то там разреш полностью любой трафик, т.к. нет ни одной политики затрагивающей под (а по дефолту default to allow). Создадим манифест разрешающий только трафик с пода `tb` неймспейса `team-b`. Манифест [manifests/50-netpolicy04.yaml](manifests/50-netpolicy04.yaml).
+Применим магифест и проверим доступ снаружи к поду `tb` (namespace team-b).
 
 ```
 dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/14-kuber-05-policy/manifests$ kubectl apply -f 50-netpolicy04.yaml 
@@ -170,7 +170,7 @@ networkpolicy.networking.k8s.io/team-a-egress configured
 networkpolicy.networking.k8s.io/team-b-ingress created
 ```
 
-Изнутри кластера (из пода ta) доступ есть:
+Изнутри кластера (из пода `ta`) доступ к поду `tb` есть:
 ```
 root@ta:/# curl tb.team-b
 <!DOCTYPE html>
@@ -192,4 +192,4 @@ dgolodnikov@pve-vm1:~$ curl 192.168.8.40:30002
 ^C
 ```
 
-Соответсввенно, team-b.tb и team-a.ta могут общаться только между собой внутри кластера (причем по DNS имени в том числе). При этом у team-b.tb есть выход в Интрнет, а у team-a нет. Что и требовалось в задании. 
+Соответсввенно, `team-b.tb` и `team-a.ta` могут общаться только между собой внутри кластера (причем по DNS имени в том числе). При этом у `team-b.tb` есть выход в Интернет, а у `team-a` нет. Что и требовалось в задании. 
