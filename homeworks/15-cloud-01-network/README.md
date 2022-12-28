@@ -242,7 +242,7 @@ PING ngs.ru (195.19.220.25) 56(84) bytes of data.
 rtt min/avg/max/mdev = 58.918/58.918/58.918/0.000 ms
 
 dgolodnikov@fhm92trq9tj149icvdh0:~$ curl ifconfig.me
-130.193.51.3
+130.193.51.32
 ```
 Доступ в Интернет есть. IP адрес в выводе `curl ifconfig.me` на VM-private соответсвует внешнему адресу VM nat-instance, что говорит о корректном маршруте прохождения трафика в сеть Интернет и рабочем NAT-instance. Все ок, задача выполнена. 
 
