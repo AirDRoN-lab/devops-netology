@@ -1,9 +1,23 @@
 resource "yandex_compute_instance_group" "ig-01" {
   name               = "ig-01"
+  folder_id = var.yc_folder_id
   service_account_id = "${yandex_iam_service_account.sa.id}"
+  deletion_protection = false
+
+  health_check {
+    healthy_threshold   = 2
+    interval            = 6
+    timeout             = 3
+    unhealthy_threshold = 2
+
+    http_options {
+      path = "/"
+      port = 80
+    }
+  }
 
   instance_template {
-    platform_id = "standard-v3"
+    platform_id = "standard-v1"
     resources {
       cores  = 2
       memory = 2
@@ -27,7 +41,7 @@ resource "yandex_compute_instance_group" "ig-01" {
     }
 
     metadata = { 
-      user-data = "${file("96-meta-01.txt")}" #   ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
+      user-data = "${file("96-meta.txt")}" #   ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
     }
   }
 
@@ -46,10 +60,10 @@ resource "yandex_compute_instance_group" "ig-01" {
     max_expansion   = 0
   }
 
-  # load_balancer {
-  #   target_group_name        = "lb-target-group-01"
-  #   target_group_description = "load balancer target group for web service"
-  # }
+  load_balancer {
+    target_group_name        = "lb-target-group-001"
+    target_group_description = "load balancer target group for web service"
+  }
 }
 
 

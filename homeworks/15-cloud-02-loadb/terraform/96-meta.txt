@@ -1,0 +1,11 @@
+#cloud-config
+users:
+  - name: dgolodnikov 
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys: [ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCiDlQz+VUUHpu38nlrluc6+tnH0Vhtjc4NbvWLwI1/ctPdhoqaAyJiwq/AO6hFjN2q/x0B5OCFah4WgG9SxlvIdEpIdL7OMxKOHWB9jio59gWKLFz9gpA1KXnYgVy5NLar4hQ3VM3qpmVvGJ3/cbNY/tuxGlmohpC7vHyGB9g883Rzv3Zhe89/HTOt/0txvpilfq/MdLMdEPejCYguwFp9MyQ2Gh3bye5AAfrg/ymbKCgHnx3mUxQrDndTaYi6mlYh7TEuEpSXmVvRu8QPmwSa2dTw0oUMpYTYHNudmV4DFg3dVhG/ziV+QmzWH9CKevADz/swHx+hdBCkoZ9ZR2Hl4oRMJiAWlxjQUWnEGPOXUVaLo4AzYxrgq871xpad5iDZckyukBaNWOoCRtXIEuNCkpwEtb5QAMtXUUF2WTqMh4sUSdBNYt0IyrjJ0ZPD3V7+IeKbfZ5OQjOChf6RC+RAIXAnC7rZ2RdWRo0ePjUGO3HIA3vnoBbkf5nehULYGV0= dgolodnikov@pve-vm1]
+runcmd:
+ - mac=$(ip a | grep ether | awk '{print $2}')
+ - cd /var/www/html
+ - echo '<html><h1>My cool web-server VM</h1><img src="https://storage.yandexcloud.net/ya-bucket-001/sigal.jpg" alt="Steven_Sigal"><br><b>'$mac'</b></html>' > index.html

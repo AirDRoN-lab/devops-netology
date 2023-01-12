@@ -1,13 +1,13 @@
 variable "yc_token" {
-  default="AQAAAABdTOf3AATuwQPU3CEll0YMtIUpeaGu-Kg"
+  default="AQAAAAXXXXXXXXXXXXXXXXXXeaGu-Kg"
 }
 
 variable "yc_cloud_id" {
-  default="b1gekc4vbv7jejkjhfm9"
+  default="b1geXXXXXXXXXX7jejkjhfm9"
 }
 
 variable "yc_folder_id" {
-  default = "b1g0o714bmkmu7dahcpn"
+  default = "b1gedrXXXXXXXtepos1sa"
 }
 
 variable "yc_zone" {
@@ -17,3 +17,7 @@ variable "yc_zone" {
 variable "yc_region" {
   default = "ru-central1"
 }
+
+# variable "pic_url" {
+#   default = "'https://storage.yandexcloud.net/ya-bucket-001/sigal.jpg'"
+# }

@@ -27,6 +27,8 @@
 
 ## Ответ:
 
+Начальное состояние Яндекс облака (далее yc):
+
 ```
 dgolodnikov@pve-vm1:~/REPO$  yc vpc network list
 +----+------+
@@ -46,26 +48,132 @@ dgolodnikov@pve-vm1:~/REPO$ yc vpc address list
 +----+------+---------+----------+------+
 +----+------+---------+----------+------+
 
-dgolodnikov@pve-vm1:~/REPO$ yc vpc gateway list
-+----+------+-------------+
-| ID | NAME | DESCRIPTION |
-+----+------+-------------+
-+----+------+-------------+
-
 ```
 Создадим манифесты терраформ, разделим на группы:
-- [main.tf](terraform/10-main.tf) c данными для подключения
-- [vpc.tf](terraform/20-vpc.tf) c конфигурацией сетей, подсетей 
-- [route.tf](terraform/24-route.tf) c конфигурацией маршрутизации
-- [compute.tf](terraform/30-сompute.tf) с конфигурацией VM
-- [output.tf](terraform/90-output.tf) для определения выходных переменных
-- [variables.tf](terraform/95-variables.tf) для определения входных переменных
-- [meta.txt](terraform/96-meta.txt) данные для подключения (ключи).
+- [10-main.tf](terraform/10-main.tf) c конфигурацией провайдера и требованиям к terraform
+- [15-sa.tf](terraform/15-sa.tf) c конфигурацией сервисного аккаунта (создан единый аккаунт с ролью `editor`)
+- [20-vpc.tf](terraform/20-vpc.tf) c конфигурацией VPC (сетей, подсетей)
+- [26-storage.tf](terraform/26-storage.tf) c конфигурацией storage и обьекта (картинка terraform/pic/sigal.jpg)
+- [30-compute.tf](terraform/30-сompute.tf) с конфигурацией Instanсe Group 
+- [40-lb.tf](terraform/40-lb.tf) с конфигурацией сетевого LoadBalancer
+- [90-output.tf](terraform/90-output.tf) для определения выходных переменных (для удобства)
+- [95-variables.tf](terraform/95-variables.tf) для определения входных переменных облака
+- [96-meta.txt](terraform/96-meta.txt) данные для подключения (ключи и скрипт для формирования заглавной страницы).
 
+Применяем манифесты, запускаем terraform apply (вывод намеренно сокращен):
+```
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb$ terraform -chdir=terraform apply -auto-approve
+...
+Changes to Outputs:
+  + lb-01      = []
+  + network-01 = (known after apply)
+  + subnet-01  = (known after apply)
+time_sleep.wait_60_seconds: Creating...
+yandex_vpc_network.vpc-netology: Creating...
+yandex_iam_service_account.sa: Creating...
+yandex_vpc_network.vpc-netology: Creation complete after 1s [id=enps4gaqbcp1h3e15bdi]
+yandex_vpc_subnet.subnet-01: Creating...
+yandex_iam_service_account.sa: Creation complete after 2s [id=aje21tgv9c54j01i7vsm]
+yandex_resourcemanager_folder_iam_member.sa-editor: Creating...
+yandex_iam_service_account_static_access_key.sa-static-key: Creating...
+yandex_vpc_subnet.subnet-01: Creation complete after 1s [id=e9b04ffjuc11k1vli4fm]
+yandex_compute_instance_group.ig-01: Creating...
+yandex_iam_service_account_static_access_key.sa-static-key: Creation complete after 1s [id=aje0tj3flv4l3port4il]
+yandex_storage_bucket.ya-bucket-001: Creating...
+yandex_resourcemanager_folder_iam_member.sa-editor: Creation complete after 2s [id=b1gedruc3jl8tepos1sa/editor/serviceAccount:aje21tgv9c54j01i7vsm]
+yandex_storage_bucket.ya-bucket-001: Creation complete after 1s [id=ya-bucket-001]
+time_sleep.wait_60_seconds: Still creating... [10s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [10s elapsed]
+time_sleep.wait_60_seconds: Still creating... [20s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [20s elapsed]
+time_sleep.wait_60_seconds: Still creating... [30s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [30s elapsed]
+time_sleep.wait_60_seconds: Still creating... [40s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [40s elapsed]
+time_sleep.wait_60_seconds: Still creating... [50s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [50s elapsed]
+time_sleep.wait_60_seconds: Still creating... [1m0s elapsed]
+time_sleep.wait_60_seconds: Creation complete after 1m0s [id=2023-01-12T02:00:18Z]
+yandex_storage_object.sigal: Creating...
+yandex_storage_object.sigal: Creation complete after 0s [id=sigal.jpg]
+yandex_compute_instance_group.ig-01: Still creating... [1m0s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [1m10s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [1m20s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [1m30s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [1m40s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [1m50s elapsed]
+yandex_compute_instance_group.ig-01: Still creating... [2m0s elapsed]
+yandex_compute_instance_group.ig-01: Creation complete after 2m8s [id=cl1s1f9g50t2uri83u40]
+yandex_lb_network_load_balancer.lb-01: Creating...
+yandex_lb_network_load_balancer.lb-01: Creation complete after 4s [id=enp3nkmvg9r4lofm281d]
 
+Apply complete! Resources: 10 added, 0 changed, 0 destroyed.
 
+Outputs:
 
+lb-01 = tolist([])
+network-01 = "enps4gaqbcp1h3e15bdi"
+subnet-01 = "e9b04ffjuc11k1vli4fm"
 
+```
+
+Т.е. в итоге мы создали VPC:
+
+```
+dgolodnikov@pve-vm1:~$ yc vpc network list
++----------------------+--------------+
+|          ID          |     NAME     |
++----------------------+--------------+
+| enps4gaqbcp1h3e15bdi | vpc-netology |
++----------------------+--------------+
+
+dgolodnikov@pve-vm1:~$ yc vpc subnet list
++----------------------+-----------+----------------------+----------------+---------------+-------------------+
+|          ID          |   NAME    |      NETWORK ID      | ROUTE TABLE ID |     ZONE      |       RANGE       |
++----------------------+-----------+----------------------+----------------+---------------+-------------------+
+| e9b04ffjuc11k1vli4fm | subnet-01 | enps4gaqbcp1h3e15bdi |                | ru-central1-a | [192.168.10.0/24] |
++----------------------+-----------+----------------------+----------------+---------------+-------------------+
+```
+
+- [01_yc_dashboard.PNG](screens/01_yc_dashboard.PNG) скрин дашборда yc с созданными сервисами
+
+- [02_yc_sa.PNG](screens/02_yc_sa.PNG) скрин созданных сервисных аккаунтов. Создан единый аккаунт 'sa' с ролью `editor`.
+
+- [03_yc_storage.PNG](screens/03_yc_storage.PNG) скрин созданного бакета с обьектом. Ссылка на обьект скопирована и вставлена в файл metadata [96-meta.txt](terraform/96-meta.txt). Также в данный файл добавлен скрипт для вывода мак адресов VM для того, чтобы тестовые страницы различались.
+
+- [04_yc_vm.PNG](screens/04_yc_vm.PNG) скрин созданных VM с помощью instance group
+
+- [05_yc_ig.PNG](screens/05_yc_ig.PNG) скрин созданной instance group, использованной для создания VM и поддержания сервиса
+
+- [06_yc_lb.PNG](screens/06_yc_lb.PNG) скрин созданного балансироващика трафика с таргет группой с VM. Адрес балансировщика http://51.250.89.16/. 
+
+Проверим как балансируется трафик между VM:
+
+- [07_test_page_vm01.PNG](screens/07_test_page_vm01.PNG) 
+- [08_test_page_vm02.PNG](screens/08_test_page_vm02.PNG) 
+- [09_test_page_vm03.PNG](screens/09_test_page_vm03.PNG) 
+
+Балансировка выполняется по всем трем VM! Это видно по различным стартовым страницам (различные mac адреса). Балансировка работает. Проверим поведение сервиса при удалении двух VM из трех . Инициируем удаление:
+
+- [10_yc_vm_del.PNG](screens/10_yc_vm_del.PNG) 
+
+VM автоматически пересоздаются и имеют новый id:
+
+- [11_yc_vm_recreate.PNG](screens/11_yc_vm_recreate.PNG) 
+
+Проверим именились ли целевые группы в настройках Loadbalancer:
+
+- [12_yc_lb_afterdel.PNG](screens/12_yc_lb_afterdel.PNG) 
+
+Целевая группа хостов изменилась, у VM новые id. Повторно проверим балансировку.
+
+- [13_test_page_vm01.PNG](screens/13_test_page_vm01.PNG) 
+- [14_test_page_vm02.PNG](screens/14_test_page_vm02.PNG) 
+- [15_test_page_vm03.PNG](screens/15_test_page_vm03.PNG) 
+
+Балансировка работает. Видно изменение мак адреса на стартовых страницах, относительно скринотов в начале задания (до удаления VM). Задание выполнено!
+
+PS: Задание со * (Application LoadBalancer) будет выполнено позже, после получение допуска к диплому (почему-то его нет =) ).
 
 ## Задание 2*. AWS (необязательное к выполнению)
 
@@ -93,3 +201,7 @@ chkconfig httpd on
 cd /var/www/html
 echo "<html><h1>My cool web-server</h1></html>" > index.html
 ```
+
+## Ответ:
+
+Нет возможности сделать ДЗ, в связи с текущим отсутствием возможности создать тестовый аккаунт в AWS.
