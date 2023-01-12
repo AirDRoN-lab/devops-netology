@@ -117,7 +117,7 @@ subnet-01 = "e9b04ffjuc11k1vli4fm"
 
 ```
 
-Т.е. в итоге мы создали VPC:
+Т.е. в итоге мы создали:
 
 ```
 dgolodnikov@pve-vm1:~$ yc vpc network list
@@ -133,6 +133,73 @@ dgolodnikov@pve-vm1:~$ yc vpc subnet list
 +----------------------+-----------+----------------------+----------------+---------------+-------------------+
 | e9b04ffjuc11k1vli4fm | subnet-01 | enps4gaqbcp1h3e15bdi |                | ru-central1-a | [192.168.10.0/24] |
 +----------------------+-----------+----------------------+----------------+---------------+-------------------+
+
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc compute instance-group list
++----------------------+-------+--------+------+
+|          ID          | NAME  | STATUS | SIZE |
++----------------------+-------+--------+------+
+| cl1s1f9g50t2uri83u40 | ig-01 | ACTIVE |    3 |
++----------------------+-------+--------+------+
+
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc lb network-load-balancer list
++----------------------+-------+-------------+----------+----------------+------------------------+--------+
+|          ID          | NAME  |  REGION ID  |   TYPE   | LISTENER COUNT | ATTACHED TARGET GROUPS | STATUS |
++----------------------+-------+-------------+----------+----------------+------------------------+--------+
+| enp3nkmvg9r4lofm281d | lb-01 | ru-central1 | EXTERNAL |              1 | enp5g3smpl30rh02lr01   | ACTIVE |
++----------------------+-------+-------------+----------+----------------+------------------------+--------+
+
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc load-balancer network-load-balancer show lb-01
+id: enp3nkmvg9r4lofm281d
+folder_id: b1gedruc3jl8tepos1sa
+created_at: "2023-01-12T02:01:29Z"
+name: lb-01
+region_id: ru-central1
+status: ACTIVE
+type: EXTERNAL
+listeners:
+  - name: lb-ls-01
+    address: 51.250.89.16
+    port: "80"
+    protocol: TCP
+    target_port: "80"
+    ip_version: IPV4
+attached_target_groups:
+  - target_group_id: enp5g3smpl30rh02lr01
+    health_checks:
+      - name: hc-http
+        interval: 2s
+        timeout: 1s
+        unhealthy_threshold: "2"
+        healthy_threshold: "2"
+        http_options:
+          port: "80"
+          path: /
+
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc load-balancer target-group list
++----------------------+---------------------+---------------------+-------------+--------------+
+|          ID          |        NAME         |       CREATED       |  REGION ID  | TARGET COUNT |
++----------------------+---------------------+---------------------+-------------+--------------+
+| enp5g3smpl30rh02lr01 | lb-target-group-001 | 2023-01-12 01:59:27 | ru-central1 |            3 |
++----------------------+---------------------+---------------------+-------------+--------------+
+
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc storage bucket list
++---------------+----------------------+----------+-----------------------+---------------------+
+|     NAME      |      FOLDER ID       | MAX SIZE | DEFAULT STORAGE CLASS |     CREATED AT      |
++---------------+----------------------+----------+-----------------------+---------------------+
+| ya-bucket-001 | b1gedruc3jl8tepos1sa |        0 | STANDARD              | 2023-01-12 01:59:22 |
++---------------+----------------------+----------+-----------------------+---------------------+
+
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc storage bucket show ya-bucket-001
+name: ya-bucket-001
+folder_id: b1gedruc3jl8tepos1sa
+anonymous_access_flags:
+  read: true
+  list: true
+  config_read: true
+default_storage_class: STANDARD
+versioning: VERSIONING_DISABLED
+created_at: "2023-01-12T01:59:22.038585Z"
+
 ```
 
 - [01_yc_dashboard.PNG](screens/01_yc_dashboard.PNG) скрин дашборда yc с созданными сервисами
@@ -165,7 +232,21 @@ VM автоматически пересоздаются и имеют новы�
 
 - [12_yc_lb_afterdel.PNG](screens/12_yc_lb_afterdel.PNG) 
 
-Целевая группа хостов изменилась, у VM новые id. Повторно проверим балансировку.
+Целевая группа хостов изменилась, у VM новые id. 
+
+```
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc compute instance list
++----------------------+---------------------------+---------------+---------+-------------+---------------+
+|          ID          |           NAME            |    ZONE ID    | STATUS  | EXTERNAL IP |  INTERNAL IP  |
++----------------------+---------------------------+---------------+---------+-------------+---------------+
+| fhm40e3kstpejq02os2d | cl1s1f9g50t2uri83u40-ohew | ru-central1-a | RUNNING |             | 192.168.10.7  |
+| fhmdf036fria2vgbpmpp | cl1s1f9g50t2uri83u40-emyb | ru-central1-a | RUNNING |             | 192.168.10.9  |
+| fhmkq7c1mgvn4ur9uas7 | cl1s1f9g50t2uri83u40-oxyz | ru-central1-a | RUNNING |             | 192.168.10.33 |
++----------------------+---------------------------+---------------+---------+-------------+---------------+
+
+```
+
+Повторно проверим балансировку.
 
 - [13_test_page_vm01.PNG](screens/13_test_page_vm01.PNG) 
 - [14_test_page_vm02.PNG](screens/14_test_page_vm02.PNG) 
