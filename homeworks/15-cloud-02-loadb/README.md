@@ -148,7 +148,7 @@ dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ 
 | enp3nkmvg9r4lofm281d | lb-01 | ru-central1 | EXTERNAL |              1 | enp5g3smpl30rh02lr01   | ACTIVE |
 +----------------------+-------+-------------+----------+----------------+------------------------+--------+
 
-dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc load-balancer network-load-balancer show lb-01
+dgolodnikov@pve-vm1:~$ yc load-balancer network-load-balancer show lb-01
 id: enp3nkmvg9r4lofm281d
 folder_id: b1gedruc3jl8tepos1sa
 created_at: "2023-01-12T02:01:29Z"
@@ -175,21 +175,21 @@ attached_target_groups:
           port: "80"
           path: /
 
-dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc load-balancer target-group list
+dgolodnikov@pve-vm1:~$ yc load-balancer target-group list
 +----------------------+---------------------+---------------------+-------------+--------------+
 |          ID          |        NAME         |       CREATED       |  REGION ID  | TARGET COUNT |
 +----------------------+---------------------+---------------------+-------------+--------------+
 | enp5g3smpl30rh02lr01 | lb-target-group-001 | 2023-01-12 01:59:27 | ru-central1 |            3 |
 +----------------------+---------------------+---------------------+-------------+--------------+
 
-dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc storage bucket list
+dgolodnikov@pve-vm1:~$ yc storage bucket list
 +---------------+----------------------+----------+-----------------------+---------------------+
 |     NAME      |      FOLDER ID       | MAX SIZE | DEFAULT STORAGE CLASS |     CREATED AT      |
 +---------------+----------------------+----------+-----------------------+---------------------+
 | ya-bucket-001 | b1gedruc3jl8tepos1sa |        0 | STANDARD              | 2023-01-12 01:59:22 |
 +---------------+----------------------+----------+-----------------------+---------------------+
 
-dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc storage bucket show ya-bucket-001
+dgolodnikov@pve-vm1:~$ yc storage bucket show ya-bucket-001
 name: ya-bucket-001
 folder_id: b1gedruc3jl8tepos1sa
 anonymous_access_flags:
@@ -235,7 +235,7 @@ VM автоматически пересоздаются и имеют новы�
 Целевая группа хостов изменилась, у VM новые id. 
 
 ```
-dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ yc compute instance list
+dgolodnikov@pve-vm1:~$ yc compute instance list
 +----------------------+---------------------------+---------------+---------+-------------+---------------+
 |          ID          |           NAME            |    ZONE ID    | STATUS  | EXTERNAL IP |  INTERNAL IP  |
 +----------------------+---------------------------+---------------+---------+-------------+---------------+
@@ -243,7 +243,6 @@ dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/15-cloud-02-loadb/screens$ 
 | fhmdf036fria2vgbpmpp | cl1s1f9g50t2uri83u40-emyb | ru-central1-a | RUNNING |             | 192.168.10.9  |
 | fhmkq7c1mgvn4ur9uas7 | cl1s1f9g50t2uri83u40-oxyz | ru-central1-a | RUNNING |             | 192.168.10.33 |
 +----------------------+---------------------------+---------------+---------+-------------+---------------+
-
 ```
 
 Повторно проверим балансировку.
