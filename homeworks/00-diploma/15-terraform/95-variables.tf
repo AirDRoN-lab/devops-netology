@@ -13,6 +13,14 @@ variable "YC_FOLDER_ID" {
 #  default=env("YC_FOLDER_ID")
 }
 
+variable "YC_SA_ACCESSKEY" {
+  type = string
+}
+
+variable "YC_SA_SECRETKEY" {
+  type = string
+}
+
 variable "yc_zone" {
   default = "ru-central1-a"
 }

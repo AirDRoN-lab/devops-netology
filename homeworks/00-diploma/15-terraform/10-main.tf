@@ -11,8 +11,8 @@ terraform {
     bucket     = "tf-bucket"
     region     = var.ru-central1
     key        = "netology.tfstate"
-    access_key = yandex_iam_service_account_static_access_key.tf-sa-static-key.access_key
-    secret_key = yandex_iam_service_account_static_access_key.tf-sa-static-key.secret_key
+    access_key = var.YC_SA_ACCESSKEY
+    secret_key = var.YC_SA_SECRETKEY
 
     skip_region_validation      = true
     skip_credentials_validation = true
