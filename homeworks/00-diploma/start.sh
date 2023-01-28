@@ -20,7 +20,9 @@ then
         source 02-yc-export/yc_work.sh apply
         source 02-yc-export/yc_work.sh s3create
     fi
+    printf "${BLUE}--- Terraform create WS and select...${NC}\n"
     terraform workspace new ${TF_WORKSPACE}
+    #terraform -chdir=15-terraform  workspace select ${TF_WORKSPACE}
 fi
 
 if [ "$1" == "export" ]
@@ -30,7 +32,7 @@ fi
 
 if [ "$1" == "apply" ]
 then  
-    printf "${BLUE}--- Terraform INIT and APPLY ...${NC}"
+    printf "${BLUE}--- Terraform INIT and APPLY ...${NC}\n"
     terraform -chdir=15-terraform  workspace select ${TF_WORKSPACE}
     terraform -chdir=15-terraform  init
     terraform -chdir=15-terraform  apply -auto-approve  
@@ -38,7 +40,7 @@ then
     vm_ip2=$(terraform -chdir=15-terraform output external_ip_address_vm_2)
     vm_ip3=$(terraform -chdir=15-terraform output external_ip_address_vm_3)
 
-    printf "${BLUE}--- Terraform Output ...${NC}"
+    printf "${BLUE}--- Terraform Output ...${NC}\n"
     printf "vm1-master01: ${GREEN}$vm_ip1"
     printf "vm2-node01: ${GREEN}$vm_ip2"
     printf "vm3-node02: ${GREEN}$vm_ip3"
@@ -46,46 +48,47 @@ fi
 
 if [ "$1" == "destroy" ]
 then  
-    printf "${BLUE}--- Terraform ${RED}DESTROY${BLUE} ...${NC}"
+    printf "${BLUE}--- Terraform ${RED}DESTROY${BLUE} ...${NC}\n"
     terraform -chdir=15-terraform  workspace select ${TF_WORKSPACE}
     terraform -chdir=15-terraform destroy -auto-approve
+    02-yc-export/yc_work.sh delete
 fi
 
 if [ "$1" == "play" ]
 then  
     terraform -chdir=15-terraform  workspace select ${TF_WORKSPACE}
-    vm_ip1=$(terraform -chdir=15-terraform  -worksppace=${TF_WORKSPACE} output external_ip_address_vm_1)
-    vm_ip2=$(terraform -chdir=15-terraform  -worksppace=${TF_WORKSPACE} output external_ip_address_vm_2)
-    vm_ip3=$(terraform -chdir=15-terraform  -worksppace=${TF_WORKSPACE} output external_ip_address_vm_3)
+    vm_ip1=$(terraform -chdir=15-terraform  output external_ip_address_vm_1)
+    vm_ip2=$(terraform -chdir=15-terraform  output external_ip_address_vm_2)
+    vm_ip3=$(terraform -chdir=15-terraform  output external_ip_address_vm_3)
     printf "${BLUE}--- Starting ansible-playbook PLAY ...${NC}"
-    printf "vm1-master01: ${GREEN}$vm_ip1"
-    printf "vm2-node01: ${GREEN}$vm_ip2"
-    printf "vm3-node02: ${GREEN}$vm_ip3"
+    printf "vm1-master01: ${GREEN}$vm_ip1${NC}\n"
+    printf "vm2-node01: ${GREEN}$vm_ip2${NC}\n"
+    printf "vm3-node02: ${GREEN}$vm_ip3${NC}\n"
     #ansible-playbook -i playbook/inventory/prod.yml playbook/site.yml -e vmip1=$vm_ip1 -e vmip2=$vm_ip2 -e vmip3=$vm_ip3 --diff && echo "--- All ok. Check the service! " 
 fi
 
 if [ "$1" == "check" ]
 then  
     terraform -chdir=15-terraform  workspace select ${TF_WORKSPACE}
-    vm_ip1=$(terraform -chdir=15-terraform -worksppace=${TF_WORKSPACE} output external_ip_address_vm_1)
-    vm_ip2=$(terraform -chdir=15-terraform -worksppace=${TF_WORKSPACE} output external_ip_address_vm_2)
-    vm_ip3=$(terraform -chdir=15-terraform -worksppace=${TF_WORKSPACE} output external_ip_address_vm_3)
+    vm_ip1=$(terraform -chdir=15-terraform output external_ip_address_vm_1)
+    vm_ip2=$(terraform -chdir=15-terraform output external_ip_address_vm_2)
+    vm_ip3=$(terraform -chdir=15-terraform output external_ip_address_vm_3)
     printf "${BLUE}--- Starting ansible-playbook PLAY ...${NC}"
-    printf "vm1-master01: ${GREEN}$vm_ip1"
-    printf "vm2-node01: ${GREEN}$vm_ip2"
-    printf "vm3-node02: ${GREEN}$vm_ip3"
+    printf "vm1-master01: ${GREEN}$vm_ip1${NC}\n"
+    printf "vm2-node01: ${GREEN}$vm_ip2${NC}\n"
+    printf "vm3-node02: ${GREEN}$vm_ip3${NC}\n"
     #ansible-playbook -i playbook/inventory/prod.yml playbook/site.yml -e vmip1=$vm_ip1 -e vmip2=$vm_ip2 -e vmip3=$vm_ip3 --check
 fi
 
 if [ "$1" == "show" ]
 then  
     terraform -chdir=15-terraform  workspace select ${TF_WORKSPACE}
-    printf "${BLUE}--- SHOW all parameters ...${NC}"
-    vm_ip1=$(terraform -chdir=15-terraform -worksppace=${TF_WORKSPACE} output external_ip_address_vm_1)
-    vm_ip2=$(terraform -chdir=15-terraform -worksppace=${TF_WORKSPACE} output external_ip_address_vm_2)
-    vm_ip3=$(terraform -chdir=15-terraform -worksppace=${TF_WORKSPACE} output external_ip_address_vm_3)
-    printf "vm1-master01: ${GREEN}$vm_ip1"
-    printf "vm2-node01: ${GREEN}$vm_ip2"
-    printf "vm3-node02: ${GREEN}$vm_ip3"
+    printf "${BLUE}--- SHOW all parameters ...${NC}${NC}\n"
+    vm_ip1=$(terraform -chdir=15-terraform  output external_ip_address_vm_1)
+    vm_ip2=$(terraform -chdir=15-terraform  output external_ip_address_vm_2)
+    vm_ip3=$(terraform -chdir=15-terraform  output external_ip_address_vm_3)
+    printf "vm1-master01: ${GREEN}$vm_ip1${NC}\n"
+    printf "vm2-node01: ${GREEN}$vm_ip2${NC}\n"
+    printf "vm3-node02: ${GREEN}$vm_ip3${NC}\n"
     02-yc-export/yc_work.sh show
 fi

@@ -9,19 +9,17 @@ terraform {
  backend "s3" {
     endpoint   = "storage.yandexcloud.net"
     bucket     = "tf-bucket"
-    region     = var.ru-central1
-    key        = "netology.tfstate"
-    access_key = var.YC_SA_ACCESSKEY
-    secret_key = var.YC_SA_SECRETKEY
-
+    region     = "ru-central1"
+    key        = "tfstate"
     skip_region_validation      = true
     skip_credentials_validation = true
+    workspace_key_prefix        = "ws"
   }
 }
 
 provider "yandex" {
-  token     = var.yc_token
-  cloud_id  = var.yc_cloud_id
-  folder_id = var.yc_folder_id
-  zone      = var.yc_zone
+  token     = var.YC_TOKEN
+  cloud_id  = var.YC_CLOUD_ID
+  folder_id = var.YC_FOLDER_ID
+  zone      = var.YC_ZONE
 }

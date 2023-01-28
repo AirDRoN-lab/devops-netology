@@ -2,7 +2,6 @@
 resource "yandex_compute_instance" "vm1-master" {
   name = "vm-master01"
 
-
   resources {
     cores  = 2
     memory = 2
@@ -89,6 +88,5 @@ resource "yandex_compute_instance" "vm3-node02" {
 
   metadata = { 
     user-data = "${file("96-meta.txt")}" #   ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
-
   }
 }
