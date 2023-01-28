@@ -1,13 +1,13 @@
 variable "yc_token" {
-  default="AQAAAAXXXXXXXXXXXXXXXXXXeaGu-Kg"
+  default="AQAAAABdTOf3AATuwQPU3CEll0YMtIUpeaGu-Kg"
 }
 
 variable "yc_cloud_id" {
-  default="b1geXXXXXXXXXX7jejkjhfm9"
+  default="b1gekc4vbv7jejkjhfm9"
 }
 
 variable "yc_folder_id" {
-  default = "b1gedrXXXXXXXtepos1sa"
+  default = "b1gedruc3jl8tepos1sa"
 }
 
 variable "yc_zone" {
