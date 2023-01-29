@@ -12,6 +12,7 @@ HOME_DEPLOY='yes' # 'yes' or 'no'
 HOME_VM1_IP='192.168.8.50'
 HOME_VM2_IP='192.168.8.51'
 HOME_VM3_IP='192.168.8.52'
+HOME_EXT_IP='94.180.116.137'
 
 if [ "$1" == "preapply" ]
 then  
@@ -74,16 +75,24 @@ then
         vm_ip1=$(terraform -chdir=15-terraform  output external_ip_address_vm_1)
         vm_ip2=$(terraform -chdir=15-terraform  output external_ip_address_vm_2)
         vm_ip3=$(terraform -chdir=15-terraform  output external_ip_address_vm_3)
+        vm_ip1ext=$vm_ip1
     else
         vm_ip1=${HOME_VM1_IP}
         vm_ip2=${HOME_VM2_IP}
         vm_ip3=${HOME_VM3_IP}
+        vm_ip1ext=${HOME_EXT_IP}
     fi
+    printf "${BLUE}--- Export vm_ip to ENV ...${NC}\n"
+    export vm_ip1=$vm_ip1
+    export vm_ip2=$vm_ip2
+    export vm_ip3=$vm_ip3
+    export vm_ip1ext=$vm_ip1ext
     printf "${BLUE}--- Starting ansible-playbook PLAY ...${NC}\n"
     printf "vm1-master: ${GREEN}$vm_ip1${NC}\n"
     printf "vm2-node01: ${GREEN}$vm_ip2${NC}\n"
     printf "vm3-node02: ${GREEN}$vm_ip3${NC}\n"
-    #ansible-playbook -i playbook/inventory/prod.yml playbook/site.yml -e vmip1=$vm_ip1 -e vmip2=$vm_ip2 -e vmip3=$vm_ip3 --diff && echo "--- All ok. Check the service! " 
+    printf "vm1-master-ext: ${GREEN}$vm_ip1ext${NC}\n"
+    ansible-playbook -i 20-kube/inventory/kuber/hosts.yaml 20-kube/cluster.yml -b -v -e vmip1=$vm_ip1 -e vmip2=$vm_ip2 -e vmip3=$vm_ip3 -e vmip1ext=$vm_ip1ext --diff && printf "${BLUE}--- All ok! Check kuber...${NC}\n"
 fi
 
 if [ "$1" == "check" ]

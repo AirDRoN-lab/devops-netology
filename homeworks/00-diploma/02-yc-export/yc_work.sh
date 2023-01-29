@@ -13,7 +13,7 @@ YC_FOLDER_ID=$(yc config get folder-id)
 
 #default parameters
 YC_SERVICE_ACCOUNT='tf-sa'
-YC_SA_ROLE1='storage.editor'
+YC_SA_ROLE='storage.editor'
 #YC_SA_ROLE2='storage.uploader'
 YC_S3_BUCKETNAME='tf-bucket'
 
@@ -28,7 +28,7 @@ then
   printf "${BLUE}--- Assigning role to SA...${NC}\n"
   yc resource-manager folder add-access-binding ${YC_FOLDER_ID} \
     --service-account-name ${YC_SERVICE_ACCOUNT} \
-    --role ${YC_SA_ROLE1} \
+    --role ${YC_SA_ROLE} \
     --folder-id ${YC_FOLDER_ID}
   #yc resource-manager folder add-access-binding ${YC_FOLDER_ID} \
    # --service-account-name ${YC_SERVICE_ACCOUNT} \
@@ -40,12 +40,14 @@ then
   yc iam key create --service-account-name ${YC_SERVICE_ACCOUNT} \
     --folder-id ${YC_FOLDER_ID} \
     --output key.json
+  rm -rf key.json
 
   #Creating IAM access-key for S3
   printf "${BLUE}--- Creating IAM access-key for S3...${NC}\n"
   S3KEYS=$(yc iam access-key create --service-account-name ${YC_SERVICE_ACCOUNT} \
     --folder-id  ${YC_FOLDER_ID} \
     --format json)
+
   
   #set env
   printf "${BLUE}--- Exporting variables to ENV...${NC}\n"
@@ -77,18 +79,18 @@ printf "AWS_ACCESS_KEY_ID: ${GREEN}$AWS_ACCESS_KEY_ID${NC}\n"
 printf "AWS_SECRET_ACCESS_KEY: ${GREEN}$AWS_SECRET_ACCESS_KEY${NC}\n"
 fi
 
-if [ "$1" == "export" ]
-then  
-  #set env
-  printf "${BLUE}--- ENV exporting...${NC}\n"
-  export TF_VAR_YC_TOKEN=$YC_TOKEN
-  export TF_VAR_YC_CLOUD_ID=$YC_CLOUD_ID
-  export TF_VAR_YC_FOLDER_ID=$YC_FOLDER_ID
-  export TF_VAR_YC_SA_PUBLICKEYID=$(yc iam key list  --service-account-name $YC_SERVICE_ACCOUNT --format json | jq -r '.[0].id')
-  export TF_VAR_YC_SA_PUBLICKEY=$(yc iam key list  --service-account-name $YC_SERVICE_ACCOUNT --format json | jq -r '.[0].public_key')
-  export TF_VAR_YC_SA_ACCESSKEY=$(yc iam access-key list --service-account-name $YC_SERVICE_ACCOUNT --format json | jq -r '.[0].key_id')
-  export TF_VAR_YC_SA_SECRETKEY=$(yc iam access-key list --service-account-name  $YC_SERVICE_ACCOUNT --format json | jq -r '.[0].key_id')
-fi
+# if [ "$1" == "export" ]
+# then  
+#   #set env
+#   printf "${BLUE}--- ENV exporting...${NC}\n"
+#   export TF_VAR_YC_TOKEN=$YC_TOKEN
+#   export TF_VAR_YC_CLOUD_ID=$YC_CLOUD_ID
+#   export TF_VAR_YC_FOLDER_ID=$YC_FOLDER_ID
+#   export TF_VAR_YC_SA_PUBLICKEYID=$(yc iam key list  --service-account-name $YC_SERVICE_ACCOUNT --format json | jq -r '.[0].id')
+#   export TF_VAR_YC_SA_PUBLICKEY=$(yc iam key list  --service-account-name $YC_SERVICE_ACCOUNT --format json | jq -r '.[0].public_key')
+#   export TF_VAR_YC_SA_ACCESSKEY=$(yc iam access-key list --service-account-name $YC_SERVICE_ACCOUNT --format json | jq -r '.[0].key_id')
+#   export TF_VAR_YC_SA_SECRETKEY=$(yc iam access-key list --service-account-name  $YC_SERVICE_ACCOUNT --format json | jq -r '.[0].key_id')
+# fi
 
 
 if [ "$1" == "s3create" ]

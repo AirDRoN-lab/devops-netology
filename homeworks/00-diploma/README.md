@@ -145,3 +145,65 @@
 ---
 
 ## Ответ
+
+
+### Развертывание kubernettes 
+
+Перенос private ключей на VM для кубера: 
+```
+dgolodnikov@pve-vm1:~$ cat ~/.ssh/id_rsa.pub | ssh dgolodnikov@$vm_ip1 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+dgolodnikov@pve-vm1:~$ cat ~/.ssh/id_rsa.pub | ssh dgolodnikov@$vm_ip2 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+dgolodnikov@pve-vm1:~$ cat ~/.ssh/id_rsa.pub | ssh dgolodnikov@$vm_ip3 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+```
+
+Отключаем sudo для пользователя под котором будет выполняться установка:
+```
+ssh dgolodnikov@$vm_ip1 "echo 'dgolodnikov ALL=(ALL:ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/dgolodnikov"
+
+ssh dgolodnikov@$vm_ip2 "echo 'dgolodnikov ALL=(ALL:ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/dgolodnikov"
+
+ssh dgolodnikov@$vm_ip3 "echo 'dgolodnikov ALL=(ALL:ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/dgolodnikov"
+```
+
+Запускаем установку (приедварительно необходимо сконфигурировать крипт start.sh на предмет IP адресации нод):
+```
+./start.sh play
+```
+Обеспечивает доступ к кластеру на мастер ноде и компьютере администратора:
+```
+dgolodnikov@pve-vm1:~$ ssh dgolodnikov@$vm_ip1 "mkdir -p ~/.kube && sudo cp /etc/kubernetes/admin.conf ~/.kube/config && sudo chown dgolodnikov:dgolodnikov ~/.kube/config"
+
+dgolodnikov@pve-vm1:~$ scp dgolodnikov@$vm_ip1:~/.kube/config ~/.kube/config
+```
+
+Проверяем c VM администратора:
+```
+dgolodnikov@pve-vm1:~$ kubectl get node
+NAME    STATUS   ROLES           AGE   VERSION
+cp1     Ready    control-plane   13h   v1.25.6
+node1   Ready    <none>          13h   v1.25.6
+node2   Ready    <none>          13h   v1.25.6
+
+dgolodnikov@pve-vm1:~/.kube$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE
+kube-system   calico-kube-controllers-75748cc9fd-zzjx7   1/1     Running   0          13h
+kube-system   calico-node-pb942                          1/1     Running   0          13h
+kube-system   calico-node-plzqx                          1/1     Running   0          13h
+kube-system   calico-node-zrt2p                          1/1     Running   0          13h
+kube-system   coredns-588bb58b94-6fdpv                   1/1     Running   0          13h
+kube-system   coredns-588bb58b94-6vzkx                   1/1     Running   0          13h
+kube-system   dns-autoscaler-5b9959d7fc-qfxrc            1/1     Running   0          13h
+kube-system   kube-apiserver-cp1                         1/1     Running   0          13h
+kube-system   kube-controller-manager-cp1                1/1     Running   1          13h
+kube-system   kube-proxy-4jvdz                           1/1     Running   0          29m
+kube-system   kube-proxy-lj5vz                           1/1     Running   0          29m
+kube-system   kube-proxy-txskv                           1/1     Running   0          29m
+kube-system   kube-scheduler-cp1                         1/1     Running   1          13h
+kube-system   nginx-proxy-node1                          1/1     Running   0          13h
+kube-system   nginx-proxy-node2                          1/1     Running   0          13h
+kube-system   nodelocaldns-4wkmx                         1/1     Running   0          13h
+kube-system   nodelocaldns-64lbz                         1/1     Running   0          13h
+kube-system   nodelocaldns-x4bpx                         1/1     Running   0          13h
+```
