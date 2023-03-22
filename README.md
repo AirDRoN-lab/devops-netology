@@ -1,25 +1,65 @@
-# devops-netology
-Пора выйти из зоны комфорта!
-
-# любые файлы в директориях и субдиректориях .terraform (начиная с текущей директории)  
-**/.terraform/*
-
-# все файлы с раширением tfstate, а также все файлы с .tfstate. в середине имени файла (в текущей директории)
-*.tfstate 
-*.tfstate.*
-
-# файл crash.log (в текущей директории)
-crash.log
-
-# любые файлы с расширением tfvars (в текущей директории)
-*.tfvars
-
-# файл override.tf, override.tf.json, а также любые файлы с окончанием _override.tf и _override.tf.json (в текущей директории) 
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
-
-# файл .terraformrc и terraform.rc (в текущей директории)
-.terraformrc
-terraform.rc
+[Дипломный проект. В работе...](homeworks/00-diploma)
+homeworks/01-intro-01
+homeworks/02-git-04
+homeworks/03-fs-09
+homeworks/03-net-06
+homeworks/03-net-06_ds10
+homeworks/03-net-07
+homeworks/03-net-08
+homeworks/03-os-03
+homeworks/03-os-04
+homeworks/03-sec-09
+homeworks/03-term-01
+homeworks/03-term-02
+homeworks/04-scr-01
+homeworks/04-scr-02
+homeworks/04-scr-03
+homeworks/05-virt-01-basics
+homeworks/05-virt-02-iaac
+homeworks/05-virt-03-docker
+homeworks/05-virt-04-compose
+homeworks/05-virt-05-swarm
+homeworks/06-db-01-basics
+homeworks/06-db-02-sql
+homeworks/06-db-03-mysql
+homeworks/06-db-04-psql
+homeworks/06-db-05-elastic
+homeworks/06-db-06-tshooting
+homeworks/07-terraform-01-intro
+homeworks/07-terraform-02-syntax
+homeworks/07-terraform-03-basic
+homeworks/07-terraform-04-teamwork
+homeworks/07-terraform-05-golang
+homeworks/07-terraform-06-providers
+homeworks/08-ansible-01-basic
+homeworks/08-ansible-02-playbook
+homeworks/08-ansible-03-yandex
+homeworks/08-ansible-04-role
+homeworks/08-ansible-05-testing
+homeworks/08-ansible-06-modules
+homeworks/09-ci-01-intro
+homeworks/09-ci-02-devops
+homeworks/09-ci-03-cicd
+homeworks/09-ci-04-jenkins
+homeworks/09-ci-05-teamcity
+homeworks/09-ci-06-gitlab
+homeworks/10-monitoring-01-base
+homeworks/10-monitoring-02-systems
+homeworks/10-monitoring-03-grafana
+homeworks/11-microservices-01-intro
+homeworks/12-kubernetes-01-intro
+homeworks/12-kubernetes-02-commands
+homeworks/12-kubernetes-03-install-part-1
+homeworks/12-kubernetes-04-install-part-2
+homeworks/12-kubernetes-05-cni
+homeworks/13-kuberconfig-01-objects
+homeworks/13-kuberconfig-02-mounts
+homeworks/13-kuberconfig-03-kubectl
+homeworks/13-kuberconfig-04-helm
+homeworks/14-kuber-01-secrets
+homeworks/14-kuber-02-vault
+homeworks/14-kuber-03-configmaps
+homeworks/14-kuber-04-serviceaccounts
+homeworks/14-kuber-05-policy
+homeworks/15-cloud-01-network
+homeworks/15-cloud-02-loadb
