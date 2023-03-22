@@ -207,3 +207,22 @@ kube-system   nodelocaldns-4wkmx                         1/1     Running   0    
 kube-system   nodelocaldns-64lbz                         1/1     Running   0          13h
 kube-system   nodelocaldns-x4bpx                         1/1     Running   0          13h
 ```
+
+### Развертывание Helm
+```
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+```
+```
+dgolodnikov@pve-vm1:~/REPO/devops-netology/homeworks/00-diploma$ helm version
+version.BuildInfo{Version:"v3.10.3", GitCommit:"835b7334cfe2e5e27870ab3ed4135f136eecc704", GitTreeState:"clean", GoVersion:"go1.18.9"}
+```
+
+```
+git clone https://github.com/prometheus-operator/kube-prometheus.git
+kubectl apply --server-side -f manifests/setup
+kubectl apply -f manifests/
+```

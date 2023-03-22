@@ -134,3 +134,29 @@ then
     printf "vm2-node01: ${GREEN}$vm_ip2${NC}\n"
     printf "vm3-node02: ${GREEN}$vm_ip3${NC}\n"
 fi
+
+if [ "$1" == "export" ]
+then 
+    if [ "${HOME_DEPLOY}" == no ]
+    then
+        terraform -chdir=15-terraform  workspace select ${TF_WORKSPACE}
+        vm_ip1=$(terraform -chdir=15-terraform  output external_ip_address_vm_1)
+        vm_ip2=$(terraform -chdir=15-terraform  output external_ip_address_vm_2)
+        vm_ip3=$(terraform -chdir=15-terraform  output external_ip_address_vm_3)
+        vm_ip1ext=$vm_ip1
+    else
+        vm_ip1=${HOME_VM1_IP}
+        vm_ip2=${HOME_VM2_IP}
+        vm_ip3=${HOME_VM3_IP}
+        vm_ip1ext=${HOME_EXT_IP}
+    fi
+    printf "${BLUE}--- Export vm_ip to ENV ...${NC}\n"
+    export vm_ip1=$vm_ip1
+    export vm_ip2=$vm_ip2
+    export vm_ip3=$vm_ip3
+    export vm_ip1ext=$vm_ip1ext
+    printf "vm1-master: ${GREEN}$vm_ip1${NC}\n"
+    printf "vm2-node01: ${GREEN}$vm_ip2${NC}\n"
+    printf "vm3-node02: ${GREEN}$vm_ip3${NC}\n"
+    printf "vm1-master-ext: ${GREEN}$vm_ip1ext${NC}\n"
+fi
