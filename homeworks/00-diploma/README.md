@@ -226,3 +226,23 @@ git clone https://github.com/prometheus-operator/kube-prometheus.git
 kubectl apply --server-side -f manifests/setup
 kubectl apply -f manifests/
 ```
+
+```
+kubectl delete -n monitoring networkpolices grafana
+```
+Доступ к Grafana осуществляется по порту 30123, т.к.:
+```
+dgolodnikov@pve-vm1:~$ kubectl get -n monitoring svc
+NAME                    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+alertmanager-main       ClusterIP   10.233.62.189   <none>        9093/TCP,8080/TCP            73d
+alertmanager-operated   ClusterIP   None            <none>        9093/TCP,9094/TCP,9094/UDP   73d
+blackbox-exporter       ClusterIP   10.233.52.244   <none>        9115/TCP,19115/TCP           73d
+grafana                 ClusterIP   10.233.5.62     <none>        3000/TCP                     73d
+grafana-access          NodePort    10.233.16.8     <none>        3000:30123/TCP               73d
+kube-state-metrics      ClusterIP   None            <none>        8443/TCP,9443/TCP            73d
+node-exporter           ClusterIP   None            <none>        9100/TCP                     73d
+prometheus-adapter      ClusterIP   10.233.21.223   <none>        443/TCP                      73d
+prometheus-k8s          ClusterIP   10.233.23.139   <none>        9090/TCP,8080/TCP            73d
+prometheus-operated     ClusterIP   None            <none>        9090/TCP                     73d
+prometheus-operator     ClusterIP   None            <none>        8443/TCP                     73d
+```
