@@ -55,7 +55,7 @@
 [13-01 Kubernetes. Контейнеры, поды, deployment, statefulset, services, endpoints](homeworks/13-kuberconfig-01-objects)<BR>
 [13-02 Kubernetes. Разделы и монтирование](homeworks/13-kuberconfig-02-mounts)<BR>
 [13-03 Kubernetes. Работа с kubectl](homeworks/13-kuberconfig-03-kubectl)<BR>
-[13-04 Kubernetes. Сервис-аккаунты](homeworks/13-kuberconfig-04-helm)<BR>
+[13-04 Kubernetes. Инструменты для упрощения написания конфигурационных файлов. Helm и Jsonnet](homeworks/13-kuberconfig-04-helm)<BR>
 [14-01 Kubernetes. Создание и использование секретов](homeworks/14-kuber-01-secrets)<BR>
 [14-02 Kubernetes. Синхронизация секретов с внешними сервисами. Vault](homeworks/14-kuber-02-vault)<BR>
 [14-03 Kubernetes. Карты конфигураций](homeworks/14-kuber-03-configmaps)<BR>
