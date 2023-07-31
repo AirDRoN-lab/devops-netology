@@ -513,7 +513,7 @@ app-deploy:
 ```
 Эксперименты ни к чему не привели =)
 
-### Ответ:
+Ответ:
 ```
  - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG' 
 ```
@@ -522,6 +522,6 @@ app-deploy:
 На данном этапе его приходиться забивать руками в Settings CICD Variables проекта, что в прицнипе наверное приемлемо, но неудобно. 
 Как-то это можно решить? Какой bestpractise vault? Pipeline cache?
 
-### Ответ:
+Ответ:
 “родительский” пайплайн, который будет с параметрами запускать “дочерние”: https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html 
 Если же проблема только в адресах машин для ansible, то можно использовать динамические inventory.
