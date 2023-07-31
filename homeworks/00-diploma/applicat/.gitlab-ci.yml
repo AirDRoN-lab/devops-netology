@@ -1,0 +1,94 @@
+default:
+  tags:
+    - home
+
+stages:          
+  - build 
+  - test
+  - deploy
+
+app-build:   # Сборка контейнера приложения и отправка в dockerhub
+  stage: build
+  image: 
+    name: gcr.io/kaniko-project/executor:v1.6.0-debug # Образ kaniko для сборки докер контейнера без докера
+    entrypoint: ["/busybox/sh", "-c"]
+  before_script: 
+    - echo "PREPARE. Using registry..."
+    - if [[ -z ${CI_COMMIT_TAG} ]]; 
+          then ITAG=${CI_COMMIT_SHORT_SHA}; 
+          else ITAG=${CI_COMMIT_TAG}; 
+        fi; # Формирование тега для образа приложения 
+    - echo ${ITAG} # Вспомогательный printout
+    - mkdir -p /kaniko/.docker # Создаем директорию конфигурации под kaniko
+    - echo "{\"auths\":{\"${DOCKER_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${DOCKER_REGISTRY_USER}" "${DOCKER_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json # Формирование файла авторизации в докерхаб для kaniko 
+    - cat /kaniko/.docker/config.json
+    - echo "ProjectDir = ${CI_PROJECT_DIR}"\n" 
+        RegName = ${CI_REGISTRY_IMAGE}\n 
+        CommitTag = ${CI_COMMIT_TAG}\n 
+        RegUser = ${CI_REGISTRY_USER}" 
+  script:
+    - echo "MAIN. Building with Kaniko ... "
+    - sed -i 's/Commit/Commit '${CI_COMMIT_SHORT_SHA}', Tag '${CI_COMMIT_TAG}'/' 
+        ${CI_PROJECT_DIR}/10-docker/index.html # Корректировка дефолтового index.html. Добавлям короткий хеш коммита и комиит тег 
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/10-docker"
+      --dockerfile "${CI_PROJECT_DIR}/10-docker/Dockerfile"
+      --destination "${DOCKER_REGISTRY_USER}/${CI_PROJECT_TITLE}:${ITAG}" # Сборка образа приложения и отправка в dockerhub
+
+app-test:
+  stage: test
+  image: dgolodnikov/u2204_glimage_v2:1.1.0 # Образ с базовыми утилитами, а также kubectl, helm и тд
+  rules:
+   - if: '$CI_COMMIT_TAG != null' # Условие выполнение job. Только при наличии тега
+  variables: 
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+  before_script:
+    - echo "PREPARE. Accessing to Kubercluster"
+    - apt-get -qy update
+    - apt-get install -qy ansible
+    - chmod 400 ${SSH_PRIVATE_KEY}
+    - echo $vm_ip1 # Вспомогательный printout. Проверка наличия значения переменной. Внешний IP cp1
+    - ansible-playbook --private-key ${SSH_PRIVATE_KEY} 
+        --user dgolodnikov 
+        --inventory 22-kubeaccess/inventory/hosts.yaml 22-kubeaccess/site.yaml 
+        -e vmip1ext=$vm_ip1 # Обеспечение доступа к kubecluster с локальной ВМ
+    - kubectl get nodes # Проверка доступа к kubercluster
+  script:
+    - helm upgrade --install --create-namespace -n test 
+        --set image.tag=$CI_COMMIT_TAG 
+        --set ipaccess=$vm_ip1
+        --set spec.ports.nodePort=${WEB_TESTPORT} $CI_PROJECT_TITLE 30-helm/webapp # Установка приложения для тестирования с созданием namespace test
+    - sleep 25 # Ожидание запуска контейнера в kubercluster
+    - kubectl get pods -n test 
+    - curl http://$vm_ip1:${WEB_TESTPORT} # Процедура теста, в случае неуспеха job останавливается
+    - helm uninstall -n test $CI_PROJECT_TITLE # Удаление раскатанного ПО после тестирования (успешного)
+  
+app-deploy:
+  stage: deploy
+  image: dgolodnikov/u2204_glimage_v2:1.1.0 # Образ с базовыми утилитами, а также kubectl, helm, ansible и тд
+  rules:
+  # - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG != "null"' 
+    - if: '$CI_COMMIT_TAG != null' # Условие выполнение job. Только при наличии тега
+  variables: 
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+  before_script:
+    - echo "PREPARE. Accessing to Kubercluster"
+    - apt-get -qy update
+    - apt-get install -qy ansible
+    - chmod 400 ${SSH_PRIVATE_KEY}
+    - echo $vm_ip1 # Вспомогательный printout. Проверка наличия значения переменной. Внешний IP cp1 
+    - ansible-playbook --private-key ${SSH_PRIVATE_KEY} 
+      --user dgolodnikov 
+      --inventory 22-kubeaccess/inventory/hosts.yaml 22-kubeaccess/site.yaml 
+      -e vmip1ext=$vm_ip1  # Обеспечение доступа к kubecluster с локальной ВМ
+    - kubectl get nodes # Проверка доступа к kubercluster
+  script:
+    - helm upgrade --install 
+      --create-namespace -n prod 
+      --set image.tag=$CI_COMMIT_TAG 
+      --set ipaccess=$vm_ip1 
+      --set spec.ports.nodePort=${WEB_PRODPORT} $CI_PROJECT_TITLE 30-helm/webapp # Установка/обновление приложения в namespace prod
+ 
+
+
+

@@ -1,0 +1,6 @@
+---------------------------------------------------------
+
+Deployed version/tag {{.Values.image.tag}}. Release name: {{ .Release.Name }}
+---------------------------------------------------------
+
+"Visit http://{{ .Values.ipaccess }}:{{ .Values.spec.ports.nodePort }} to use your application"

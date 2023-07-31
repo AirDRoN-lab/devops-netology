@@ -1,0 +1,44 @@
+default:
+  tags:
+    - home
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+#  - test
+#  - deploy
+
+# build-job:       # This job runs in the build stage, which runs first.
+#   stage: build
+#   script:
+#     - echo "Compiling the code..."
+#     - echo "Compile complete."
+
+unit-test-job:   # This job runs in the test stage.
+  stage: build
+  image: ubuntu:22.04    
+  script:
+    - echo "Running scripts... "
+    - echo $CI_PROJECT_DIR/
+    - ls -la   
+    - whoami
+    - apt update
+    - apt install -y apt-transport-https ca-certificates curl software-properties-common
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+    - apt update
+    - apt install -y python3 python3-pip
+    - apt install -y docker-ce
+    - pip3 install ansible
+    - docker --version
+    - curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+    - cd 30-docker
+    - docker run hello-world
+    - docker ps
+#    - docker build -t dgolodnikov/app_nginx_test:1.0.0 .
+
+# deploy-job:      # This job runs in the deploy stage.
+#   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#   environment: production
+#   script:
+#     - echo "Deploying application..."
+#     - echo "Application successfully deployed."
