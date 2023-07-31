@@ -1,4 +1,4 @@
-[00-Дипломный проект. В работе...](homeworks/00-diploma)<BR>
+[00-Дипломный проект.](homeworks/00-diploma/infras)<BR>
 [01-01 INTRO](homeworks/01-intro-01)<BR>
 [02-04 GIT](homeworks/02-git-04)<BR>
 [03-09 Файловые системы. RAID](homeworks/03-fs-09)<BR>

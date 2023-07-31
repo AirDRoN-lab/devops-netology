@@ -12,6 +12,8 @@
 ---
 
 ## Введение
+
+В данном репозитории находится копия проекта GitLab https://gitlab.com/dg-netology-diploma, соответсвенно ссылки ведут на GitLab
     
 Выбор стека и архитектуры:
 
@@ -19,13 +21,13 @@
 В связи с тем что жизненный цикл инфраструктуры, эксплуатация кластера Kubernettes и непосредственно приложения слабо зависимы друг от друга и более того, обычно эксплуатируются разными командами, (по согласованию с руководителем) мы создадим три репозитория:
 
     Инфраструктура облачная `atlantis` (создание облачной инфраструктуры, а также изменение с помощью ATlantis).
-    - https://gitlab.com/dg-netology-diploma/atlantis
+    - https://gitlab.com/dg-netology-diploma/atlantis (копия https://github.com/AirDRoN-lab/devops-netology/tree/main/homeworks/00-diploma/atlantis)
 
     Инфраструктура Kubernetes `infras` (развертывания kuber кластера, мониторинг) 
-    - https://gitlab.com/dg-netology-diploma/infras
+    - https://gitlab.com/dg-netology-diploma/infras (копия https://github.com/AirDRoN-lab/devops-netology/tree/main/homeworks/00-diploma/infras)
     
     Сервисный `applicat` (сборка, тестирования и деплой приложения в kuber кластер)
-    - https://gitlab.com/dg-netology-diploma/Applicat
+    - https://gitlab.com/dg-netology-diploma/Applicat (копия https://github.com/AirDRoN-lab/devops-netology/tree/main/homeworks/00-diploma/applicat)
 
 ![00-projects_tree](source/images/00-projects_tree.png)
 
@@ -45,11 +47,11 @@
 
 3. Облако и инфраструктура.  В качестве сервиса облачной инфраструктуры используем Yandex облако, как наиболее доступное (есть грант). Инструмент удаленного развертывания инфраструктуры Terraform. Изменение облачной инфраструктуры с помощью  Atlantis поднятной на отдельной VM (в ручном режиме). Подготовку к развертыванию инфраструктуры (создание S3 для стейтов терраформ, создание серивисного аккаунта в Яндекс) в облаке будем выполнять используя CICD Gitlab (репозиторий https://gitlab.com/dg-netology-diploma/atlantis). При этом непосредственно создание облачной инфраструктуры можно сделать как с помощью Атлантис (требуется в ТЗ), так и с помощью Pipeline CICD Gitlab. Запуск Pipeline для удобства контроля сделан с ручным запуском. 
 
-4. Уровень Kubernettes. Для деплоя приложений и их тестирования будем использовать кластер kubernettes. Деление сред будет выполнено посредством namespace, а именно: тестовая среда (test), продуктовая среда (prod) и среда мониторинга (monitoring).
+4. Уровень Kubernetes. Для деплоя приложений и их тестирования будем использовать кластер kubernettes. Деление сред будет выполнено посредством namespace, а именно: тестовая среда (test), продуктовая среда (prod) и среда мониторинга (monitoring).
 Кластер состоит из трех node: однa control (cp1) и две compute (node01, node02).
 Развертывание кластера будем выполнять через kubespray (заранее выполнен git clone репозитория https://github.com/kubernetes-sigs/kubespray для корректировки конфигурации) используя CICD Gitlab.
 
-5. Уровень мониторинга Kubernettes. Деплой системы мониторинга выполняется в namespace monitoring kuber кластера. Для развертывания используется решение https://github.com/prometheus-operator/kube-prometheus (клонирование репозитория и настройка выполняется динамически на стадии CI). Запуск Pipeline для удобства контроля сделаем с ручным запуском. 
+5. Уровень мониторинга Kubernetes. Деплой системы мониторинга выполняется в namespace monitoring kuber кластера. Для развертывания используется решение https://github.com/prometheus-operator/kube-prometheus (клонирование репозитория и настройка выполняется динамически на стадии CI). Запуск Pipeline для удобства контроля сделаем с ручным запуском. 
 
 6. Уровень сервиса/приложения. Приложение будет из себя предоставлять базовый nginx контейнер (`nginx:alpine`) с динамически генерируемой тестовой страницей, содержащей короткий хеш коммита и tag (для обеспечения уникальности сборки и удобства проверки).
 Сборку приложения будем выполнять внутри Gitlab Runner используя образ kaniko, т.к. позволяет собирать образы без установки docker. В силу отутствия требований к доступу приложения, доступ извне реализован через Service NodePort (хотя это не prodlike).
